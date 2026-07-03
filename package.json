@@ -2,6 +2,11 @@
   "name": "olympus-lite-workspace",
   "version": "1.0.0",
   "scripts": {
-    "build-all": "npm install --prefix olympus-lite-server && npm install --prefix olympus-lite-client && cd olympus-lite-client && npm run build"
+    "build-all": "npm install && npm install --prefix olympus-lite-server && npm install --prefix olympus-lite-client && cd olympus-lite-client && npm run build"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "serverless-http": "^4.0.0"
   }
 }
