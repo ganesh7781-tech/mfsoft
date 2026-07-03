@@ -1,0 +1,404 @@
+{
+  "gym_profile": [
+    {
+      "id": 1,
+      "gym_name": "MUSCLE FACTORY",
+      "logo_url": "",
+      "contact_phone": "9876543210",
+      "address": "123 High Street, Olympus Peak",
+      "tax_percentage": 18,
+      "receipt_footer_text": "Thank you for training with us! Focus. Commit. Achieve.",
+      "updated_at": "2026-07-03T15:37:59.940Z"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password_hash": "$2b$10$suzvGM0nia.PWeRzF/FXEuUvdDdXlSRO7bpUwltN.CMQLpcUpJA1a",
+      "created_at": "2026-07-03T15:25:14.648Z"
+    }
+  ],
+  "members": [
+    {
+      "id": 1,
+      "first_name": "1 Month Plan",
+      "last_name": 30,
+      "mobile_number": 1200,
+      "email": false,
+      "date_of_birth": 1,
+      "height_cm": null,
+      "weight_kg": null,
+      "is_deleted": true,
+      "created_at": "2026-07-03T15:33:21.194Z"
+    },
+    {
+      "id": 2,
+      "first_name": "d",
+      "last_name": "d",
+      "mobile_number": "5353534652",
+      "email": "d",
+      "date_of_birth": null,
+      "address": "d",
+      "photo_url": null,
+      "height_cm": null,
+      "weight_kg": null,
+      "fitness_goal": "General Fitness",
+      "medical_notes": null,
+      "emergency_contact": {
+        "name": "",
+        "relation": "",
+        "phone": ""
+      },
+      "status": "Active",
+      "is_deleted": true,
+      "created_at": "2026-07-03T15:35:50.039Z"
+    },
+    {
+      "id": 3,
+      "first_name": 3,
+      "height_cm": null,
+      "weight_kg": null,
+      "is_deleted": false,
+      "created_at": "2026-07-03T15:55:08.046Z"
+    },
+    {
+      "id": 4,
+      "first_name": "d",
+      "last_name": "d",
+      "mobile_number": "5353534652344",
+      "email": "d",
+      "date_of_birth": null,
+      "address": null,
+      "photo_url": null,
+      "height_cm": null,
+      "weight_kg": null,
+      "fitness_goal": "General Fitness",
+      "medical_notes": null,
+      "emergency_contact": {
+        "name": "ganeshbhadane",
+        "relation": "",
+        "phone": "09307294733"
+      },
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-07-03T15:58:58.617Z"
+    },
+    {
+      "id": 5,
+      "first_name": 3,
+      "last_name": 3,
+      "mobile_number": "2026-07-03",
+      "email": "2026-12-30",
+      "date_of_birth": 3500,
+      "height_cm": null,
+      "weight_kg": null,
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-07-03T16:06:22.951Z"
+    },
+    {
+      "id": 6,
+      "first_name": "sd",
+      "last_name": "cd",
+      "mobile_number": "2323232323232",
+      "email": null,
+      "date_of_birth": null,
+      "address": null,
+      "photo_url": null,
+      "height_cm": null,
+      "weight_kg": null,
+      "fitness_goal": "General Fitness",
+      "medical_notes": null,
+      "emergency_contact": {
+        "name": "",
+        "relation": "",
+        "phone": ""
+      },
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-07-03T16:17:20.409Z"
+    },
+    {
+      "id": 7,
+      "first_name": 6,
+      "last_name": 2,
+      "mobile_number": "2026-07-03",
+      "email": "2026-10-01",
+      "date_of_birth": 2500,
+      "height_cm": null,
+      "weight_kg": null,
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-07-03T16:17:20.411Z"
+    }
+  ],
+  "membership_plans": [
+    {
+      "id": 1,
+      "plan_name": "1 Month Plan",
+      "duration_days": 30,
+      "plan_price": 1200,
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "plan_name": "3 Months Plan",
+      "duration_days": 90,
+      "plan_price": 2500,
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "plan_name": "6 Months Plan",
+      "duration_days": 180,
+      "plan_price": 3500,
+      "is_active": true
+    },
+    {
+      "id": 4,
+      "plan_name": "12 Months Plan",
+      "duration_days": 365,
+      "plan_price": 6000,
+      "is_active": true
+    }
+  ],
+  "membership_history": [],
+  "products": [
+    {
+      "id": 1,
+      "product_name": "Whey Protein 1kg",
+      "category": "Supplements",
+      "cost_price": 2200,
+      "selling_price": 3200,
+      "stock_qty": 10,
+      "low_stock_threshold": 5,
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "product_name": "BCAA Powder",
+      "category": "Supplements",
+      "cost_price": 1200,
+      "selling_price": 1800,
+      "stock_qty": 5,
+      "low_stock_threshold": 3,
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "product_name": "Energy Drink",
+      "category": "Drinks",
+      "cost_price": 60,
+      "selling_price": 100,
+      "stock_qty": 0,
+      "low_stock_threshold": 10,
+      "is_active": true
+    },
+    {
+      "id": 4,
+      "product_name": "Gym Shaker Bottle",
+      "category": "Equipment",
+      "cost_price": 150,
+      "selling_price": 300,
+      "stock_qty": 25,
+      "low_stock_threshold": 5,
+      "is_active": true
+    }
+  ],
+  "invoices": [
+    {
+      "id": 1,
+      "member_id": 1,
+      "invoice_type": "Store",
+      "total_amount": 3776,
+      "tax_amount": 576,
+      "amount_paid": 3200,
+      "balance_due": 576,
+      "payment_method": "Card",
+      "payment_status": "Partially Paid",
+      "due_date": "2026-07-03",
+      "created_at": "2026-07-03T15:33:21.208Z"
+    },
+    {
+      "id": 2,
+      "member_id": 1,
+      "invoice_type": "Store",
+      "total_amount": 3776,
+      "tax_amount": 576,
+      "amount_paid": 3200,
+      "balance_due": 576,
+      "payment_method": "Card",
+      "payment_status": "Partially Paid",
+      "due_date": "2026-07-03",
+      "created_at": "2026-07-03T15:33:56.742Z"
+    },
+    {
+      "id": 3,
+      "member_id": null,
+      "invoice_type": "Store",
+      "total_amount": 5900,
+      "tax_amount": 900,
+      "amount_paid": 5605,
+      "balance_due": 295,
+      "payment_method": "Cash",
+      "payment_status": "Partially Paid",
+      "due_date": "2026-07-03",
+      "created_at": "2026-07-03T15:42:50.985Z"
+    },
+    {
+      "id": 4,
+      "member_id": null,
+      "invoice_type": "Store",
+      "total_amount": 8496,
+      "tax_amount": 1296,
+      "amount_paid": 6796.8,
+      "balance_due": 1699.1999999999998,
+      "payment_method": "Cash",
+      "payment_status": "Partially Paid",
+      "due_date": "2026-07-03",
+      "created_at": "2026-07-03T15:48:25.106Z"
+    },
+    {
+      "id": 5,
+      "member_id": 1,
+      "invoice_type": "Store",
+      "total_amount": 3776,
+      "tax_amount": 576,
+      "amount_paid": 3200,
+      "balance_due": 576,
+      "payment_method": "Card",
+      "payment_status": "Partially Paid",
+      "due_date": "2026-07-03",
+      "created_at": "2026-07-03T15:49:05.252Z"
+    },
+    {
+      "id": 6,
+      "member_id": 3,
+      "invoice_type": "Membership",
+      "total_amount": 4130,
+      "tax_amount": 630,
+      "amount_paid": 0,
+      "balance_due": 4130,
+      "payment_method": "UPI",
+      "payment_status": "Unpaid",
+      "due_date": "2026-12-30",
+      "created_at": "2026-07-03T16:06:22.952Z"
+    },
+    {
+      "id": 7,
+      "member_id": 6,
+      "invoice_type": "Membership",
+      "total_amount": 2950,
+      "tax_amount": 450,
+      "amount_paid": 2500,
+      "balance_due": 450,
+      "payment_method": "Cash",
+      "payment_status": "Partially Paid",
+      "due_date": "2026-10-01",
+      "created_at": "2026-07-03T16:17:20.413Z"
+    }
+  ],
+  "invoice_items": [
+    {
+      "id": 1,
+      "invoice_id": 1,
+      "product_id": 1,
+      "description": "Whey Protein 1kg",
+      "quantity": 1,
+      "unit_price": 3200,
+      "total_price": 3200,
+      "created_at": "2026-07-03T15:33:21.209Z"
+    },
+    {
+      "id": 2,
+      "invoice_id": 2,
+      "product_id": 1,
+      "description": "Whey Protein 1kg",
+      "quantity": 1,
+      "unit_price": 3200,
+      "total_price": 3200,
+      "created_at": "2026-07-03T15:33:56.744Z"
+    },
+    {
+      "id": 3,
+      "invoice_id": 3,
+      "product_id": 1,
+      "description": "Whey Protein 1kg",
+      "quantity": 1,
+      "unit_price": 3200,
+      "total_price": 3200,
+      "created_at": "2026-07-03T15:42:50.986Z"
+    },
+    {
+      "id": 4,
+      "invoice_id": 3,
+      "product_id": 2,
+      "description": "BCAA Powder",
+      "quantity": 1,
+      "unit_price": 1800,
+      "total_price": 1800,
+      "created_at": "2026-07-03T15:42:50.989Z"
+    },
+    {
+      "id": 5,
+      "invoice_id": 4,
+      "product_id": 1,
+      "description": "Whey Protein 1kg",
+      "quantity": 1,
+      "unit_price": 3200,
+      "total_price": 3200,
+      "created_at": "2026-07-03T15:48:25.107Z"
+    },
+    {
+      "id": 6,
+      "invoice_id": 4,
+      "product_id": 2,
+      "description": "BCAA Powder",
+      "quantity": 2,
+      "unit_price": 1800,
+      "total_price": 3600,
+      "created_at": "2026-07-03T15:48:25.111Z"
+    },
+    {
+      "id": 7,
+      "invoice_id": 4,
+      "product_id": 3,
+      "description": "Energy Drink",
+      "quantity": 4,
+      "unit_price": 100,
+      "total_price": 400,
+      "created_at": "2026-07-03T15:48:25.113Z"
+    },
+    {
+      "id": 8,
+      "invoice_id": 5,
+      "product_id": 1,
+      "description": "Whey Protein 1kg",
+      "quantity": 1,
+      "unit_price": 3200,
+      "total_price": 3200,
+      "created_at": "2026-07-03T15:49:05.253Z"
+    },
+    {
+      "id": 9,
+      "invoice_id": 6,
+      "product_id": null,
+      "description": "Membership Renewal: 6 Months Plan (180 Days)",
+      "quantity": 1,
+      "unit_price": 3500,
+      "total_price": 3500,
+      "created_at": "2026-07-03T16:06:22.952Z"
+    },
+    {
+      "id": 10,
+      "invoice_id": 7,
+      "product_id": null,
+      "description": "Membership Plan: 3 Months Plan (90 Days)",
+      "quantity": 1,
+      "unit_price": 2500,
+      "total_price": 2500,
+      "created_at": "2026-07-03T16:17:20.415Z"
+    }
+  ]
+}

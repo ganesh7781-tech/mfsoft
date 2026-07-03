@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Base Overrides */
+body {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  @apply antialiased bg-slate-50 text-slate-900 transition-colors duration-300;
+  background-image: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.04) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.03) 0px, transparent 50%);
+}
+
+body.dark {
+  @apply bg-slate-950 text-slate-50;
+  background-image: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.02) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.015) 0px, transparent 50%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-800 rounded-full transition-colors duration-200;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-slate-700;
+}
+
+/* Premium UI Elements - Written as raw CSS + Apply for maximum v4 compatibility */
+.glass-card {
+  @apply bg-white dark:bg-slate-900 border border-slate-200/85 dark:border-slate-800 rounded-2xl transition-all duration-300;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.02), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+  @apply border-slate-300 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/85;
+}
+
+/* Interactive Buttons */
+.btn-premium-primary {
+  @apply px-4 py-2.5 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 text-white font-medium rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+}
+
+.btn-premium-primary:hover {
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+}
+
+.btn-premium-secondary {
+  @apply px-4 py-2.5 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 font-medium rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer;
+}
+
+/* Form Elements */
+.input-premium {
+  @apply w-full px-4 py-3 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-amber-500 transition-all duration-200 text-slate-900 dark:text-slate-100;
+}
+
+.input-premium:focus {
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+}
+
+/* Badges */
+.badge-active {
+  @apply px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-500/20;
+}
+
+.badge-expired {
+  @apply px-2.5 py-1 text-xs font-semibold rounded-full bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200/50 dark:border-rose-500/20;
+}
+
+.badge-unassigned {
+  @apply px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border border-amber-200/50 dark:border-amber-500/20;
+}
+
+/* Print Receipt Styles optimized for A5 */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-receipt-modal, #print-receipt-modal * {
+    visibility: visible;
+  }
+  #print-receipt-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 148mm;
+    height: 210mm;
+    margin: 0;
+    padding: 10mm;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    color: black !important;
+  }
+}

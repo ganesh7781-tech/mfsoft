@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build-all"
+  publish = "olympus-lite-client/dist"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/v1/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200

@@ -1,0 +1,7 @@
+{
+  "name": "olympus-lite-workspace",
+  "version": "1.0.0",
+  "scripts": {
+    "build-all": "npm install --prefix olympus-lite-server && npm install --prefix olympus-lite-client && cd olympus-lite-client && npm run build"
+  }
+}
