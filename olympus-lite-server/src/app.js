@@ -11,7 +11,8 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve Uploaded Files
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+const { uploadDir } = require('../config/paths');
+app.use('/uploads', express.static(uploadDir));
 
 // Routes matrix
 const authRoutes = require('./routes/auth');

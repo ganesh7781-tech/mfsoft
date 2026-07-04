@@ -5,12 +5,10 @@ const auth = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { isFirebaseConfigured, uploadToFirebase } = require('../../config/firebase');
 
 // Set up photo upload storage (local fallback)
-const uploadDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+const { uploadDir } = require('../../config/paths');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -180,14 +178,38 @@ router.post('/', auth, upload.single('photo'), async (req, res, next) => {
     // File path for photo
     let photo_url = '';
     if (req.file) {
-      photo_url = `/uploads/${req.file.filename}`;
+      if (isFirebaseConfigured) {
+        try {
+          const fileBuffer = fs.readFileSync(req.file.path);
+          photo_url = await uploadToFirebase(fileBuffer, req.file.filename, req.file.mimetype);
+          fs.unlinkSync(req.file.path); // remove local temp file
+        } catch (err) {
+          console.error("Firebase multer file upload failed, falling back to local file:", err);
+          photo_url = `/uploads/${req.file.filename}`;
+        }
+      } else {
+        photo_url = `/uploads/${req.file.filename}`;
+      }
     } else if (req.body.photo_data_url) {
       // Base64 webcam capture
       const base64Data = req.body.photo_data_url.replace(/^data:image\/\w+;base64,/, "");
       const filename = `webcam-${Date.now()}.png`;
-      const filepath = path.join(uploadDir, filename);
-      fs.writeFileSync(filepath, base64Data, 'base64');
-      photo_url = `/uploads/${filename}`;
+
+      if (isFirebaseConfigured) {
+        try {
+          const buffer = Buffer.from(base64Data, 'base64');
+          photo_url = await uploadToFirebase(buffer, filename, 'image/png');
+        } catch (err) {
+          console.error("Firebase webcam base64 upload failed, falling back to local file:", err);
+          const filepath = path.join(uploadDir, filename);
+          fs.writeFileSync(filepath, base64Data, 'base64');
+          photo_url = `/uploads/${filename}`;
+        }
+      } else {
+        const filepath = path.join(uploadDir, filename);
+        fs.writeFileSync(filepath, base64Data, 'base64');
+        photo_url = `/uploads/${filename}`;
+      }
     }
 
     // Parse emergency contact if stringified
@@ -342,13 +364,37 @@ router.put('/:id', auth, upload.single('photo'), async (req, res, next) => {
     // Photo selection logic
     let photo_url = currentMember.photo_url;
     if (req.file) {
-      photo_url = `/uploads/${req.file.filename}`;
+      if (isFirebaseConfigured) {
+        try {
+          const fileBuffer = fs.readFileSync(req.file.path);
+          photo_url = await uploadToFirebase(fileBuffer, req.file.filename, req.file.mimetype);
+          fs.unlinkSync(req.file.path); // remove local temp file
+        } catch (err) {
+          console.error("Firebase multer file upload failed on update, falling back to local file:", err);
+          photo_url = `/uploads/${req.file.filename}`;
+        }
+      } else {
+        photo_url = `/uploads/${req.file.filename}`;
+      }
     } else if (req.body.photo_data_url) {
       const base64Data = req.body.photo_data_url.replace(/^data:image\/\w+;base64,/, "");
       const filename = `webcam-${Date.now()}.png`;
-      const filepath = path.join(uploadDir, filename);
-      fs.writeFileSync(filepath, base64Data, 'base64');
-      photo_url = `/uploads/${filename}`;
+
+      if (isFirebaseConfigured) {
+        try {
+          const buffer = Buffer.from(base64Data, 'base64');
+          photo_url = await uploadToFirebase(buffer, filename, 'image/png');
+        } catch (err) {
+          console.error("Firebase webcam base64 upload failed on update, falling back to local file:", err);
+          const filepath = path.join(uploadDir, filename);
+          fs.writeFileSync(filepath, base64Data, 'base64');
+          photo_url = `/uploads/${filename}`;
+        }
+      } else {
+        const filepath = path.join(uploadDir, filename);
+        fs.writeFileSync(filepath, base64Data, 'base64');
+        photo_url = `/uploads/${filename}`;
+      }
     }
 
     let parsedEmergency = emergency_contact;

@@ -8,7 +8,8 @@ require('dotenv').config();
 const usePostgres = (process.env.DB_HOST || process.env.DATABASE_URL) ? true : false;
 let pool = null;
 let fallbackDb = null;
-const fallbackFilePath = path.join(__dirname, 'db_fallback.json');
+const { dbFallbackPath } = require('./paths');
+const fallbackFilePath = dbFallbackPath;
 
 // Initialize Fallback JSON database schema
 function initFallbackDb() {

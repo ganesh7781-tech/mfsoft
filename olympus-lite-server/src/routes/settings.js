@@ -6,12 +6,11 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+const { uploadDir } = require('../../config/paths');
+const { isFirebaseConfigured, uploadToFirebase } = require('../../config/firebase');
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../../uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
@@ -46,7 +45,18 @@ router.put('/', auth, upload.single('logo'), async (req, res, next) => {
 
     let logo_url = existing ? existing.logo_url : '';
     if (req.file) {
-      logo_url = `/uploads/${req.file.filename}`;
+      if (isFirebaseConfigured) {
+        try {
+          const fileBuffer = fs.readFileSync(req.file.path);
+          logo_url = await uploadToFirebase(fileBuffer, req.file.filename, req.file.mimetype);
+          fs.unlinkSync(req.file.path);
+        } catch (err) {
+          console.error("Firebase logo upload failed, falling back to local file:", err);
+          logo_url = `/uploads/${req.file.filename}`;
+        }
+      } else {
+        logo_url = `/uploads/${req.file.filename}`;
+      }
     }
 
     let result;
