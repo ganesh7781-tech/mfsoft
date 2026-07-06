@@ -49,7 +49,9 @@ function initFallbackDb() {
       { id: 4, product_name: "Gym Shaker Bottle", category: "Equipment", cost_price: 150.00, selling_price: 300.00, stock_qty: 25, low_stock_threshold: 5, is_active: true }
     ],
     invoices: [],
-    invoice_items: []
+    invoice_items: [],
+    expenses: [],
+    enquiries: []
   };
   saveFallbackDb();
 }
@@ -427,10 +429,43 @@ function simulateQuery(text, params = []) {
     return { rows: [], rowCount: 0 };
   }
 
+  // UPDATE invoices
+  if (lowerQuery.includes('update invoices')) {
+    // UPDATE invoices SET amount_paid = $1, balance_due = $2, payment_status = $3, payment_method = $4, payment_history = $5 WHERE id = $6
+    const match = lowerQuery.match(/where id\s*=\s*\$(\d+)/);
+    let id = null;
+    if (match) {
+      id = parseInt(getParam(parseInt(match[1])));
+    }
+    const idx = fallbackDb.invoices.findIndex(i => i.id === id);
+    if (idx !== -1) {
+      const inv = fallbackDb.invoices[idx];
+      inv.amount_paid = parseFloat(getParam(1));
+      inv.balance_due = parseFloat(getParam(2));
+      inv.payment_status = getParam(3);
+      inv.payment_method = getParam(4);
+      if (lowerQuery.includes('payment_history =')) {
+        const histVal = getParam(5);
+        inv.payment_history = typeof histVal === 'string' ? JSON.parse(histVal) : histVal;
+      }
+      fallbackDb.invoices[idx] = inv;
+      saveFallbackDb();
+      return { rows: [inv], rowCount: 1 };
+    }
+    return { rows: [], rowCount: 0 };
+  }
+
   // 9. INVOICES
   // SELECT * FROM invoices
   if (lowerQuery.includes('from invoices') && lowerQuery.includes('select')) {
     let rows = fallbackDb.invoices;
+    if (lowerQuery.includes('where id =')) {
+      const match = lowerQuery.match(/where id\s*=\s*\$(\d+)/);
+      if (match) {
+        const idVal = parseInt(getParam(parseInt(match[1])));
+        rows = rows.filter(inv => inv.id === idVal);
+      }
+    }
     if (lowerQuery.includes('member_id =')) {
       const match = lowerQuery.match(/member_id\s*=\s*\$(\d+)/);
       if (match) {
@@ -506,6 +541,145 @@ function simulateQuery(text, params = []) {
     fallbackDb.invoice_items.push(newItem);
     saveFallbackDb();
     return { rows: [newItem], rowCount: 1 };
+  }
+
+  // 11. EXPENSES
+  // SELECT * FROM expenses
+  if (lowerQuery.includes('from expenses') && lowerQuery.includes('select')) {
+    const rows = fallbackDb.expenses || [];
+    // Sort by expense_date descending
+    const sortedRows = [...rows].sort((a, b) => new Date(b.expense_date) - new Date(a.expense_date));
+    return { rows: sortedRows, rowCount: sortedRows.length };
+  }
+
+  // INSERT INTO expenses
+  if (lowerQuery.includes('insert into expenses')) {
+    // INSERT INTO expenses (title, amount, category, expense_date, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *
+    const expensesList = fallbackDb.expenses || [];
+    const nextId = expensesList.length ? Math.max(...expensesList.map(e => e.id)) + 1 : 1;
+    const newExpense = {
+      id: nextId,
+      title: getParam(1),
+      amount: parseFloat(getParam(2) || 0),
+      category: getParam(3),
+      expense_date: getParam(4),
+      notes: getParam(5),
+      created_at: new Date()
+    };
+    if (!fallbackDb.expenses) fallbackDb.expenses = [];
+    fallbackDb.expenses.push(newExpense);
+    saveFallbackDb();
+    return { rows: [newExpense], rowCount: 1 };
+  }
+
+  // DELETE FROM expenses
+  if (lowerQuery.includes('delete from expenses')) {
+    const match = lowerQuery.match(/where id\s*=\s*\$(\d+)/);
+    let expenseId = null;
+    if (match) {
+      expenseId = parseInt(getParam(parseInt(match[1])));
+    }
+    const expensesList = fallbackDb.expenses || [];
+    const idx = expensesList.findIndex(e => e.id === expenseId);
+    if (idx !== -1) {
+      fallbackDb.expenses.splice(idx, 1);
+      saveFallbackDb();
+      return { rowCount: 1 };
+    }
+    return { rowCount: 0 };
+  }
+
+  // DELETE FROM invoices
+  if (lowerQuery.includes('delete from invoices')) {
+    const match = lowerQuery.match(/where id\s*=\s*\$(\d+)/);
+    let invoiceId = null;
+    if (match) {
+      invoiceId = parseInt(getParam(parseInt(match[1])));
+    }
+    const idx = fallbackDb.invoices.findIndex(i => i.id === invoiceId);
+    if (idx !== -1) {
+      fallbackDb.invoices.splice(idx, 1);
+      // Cascading delete invoice items
+      fallbackDb.invoice_items = (fallbackDb.invoice_items || []).filter(item => item.invoice_id !== invoiceId);
+      saveFallbackDb();
+      return { rowCount: 1 };
+    }
+    return { rowCount: 0 };
+  }
+
+  // 10. WEBSITE ENQUIRIES
+  // SELECT * FROM enquiries
+  if (lowerQuery.includes('select') && lowerQuery.includes('from enquiries')) {
+    const list = fallbackDb.enquiries || [];
+    // If it queries single item e.g. WHERE id = $1
+    if (lowerQuery.includes('where id =')) {
+      const match = lowerQuery.match(/where id\s*=\s*\$(\d+)/);
+      if (match) {
+        const id = parseInt(getParam(parseInt(match[1])));
+        const filtered = list.filter(e => e.id === id);
+        return { rows: filtered, rowCount: filtered.length };
+      }
+    }
+    // Default: Sort by created_at descending
+    const sorted = [...list].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    return { rows: sorted, rowCount: sorted.length };
+  }
+
+  // INSERT INTO enquiries
+  if (lowerQuery.includes('insert into enquiries')) {
+    // INSERT INTO enquiries (full_name, email, phone, message, source, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
+    const list = fallbackDb.enquiries || [];
+    const nextId = list.length ? Math.max(...list.map(e => e.id)) + 1 : 1;
+    const newEnquiry = {
+      id: nextId,
+      full_name: getParam(1),
+      email: getParam(2),
+      phone: getParam(3),
+      message: getParam(4),
+      source: getParam(5) || 'Website',
+      status: getParam(6) || 'New',
+      created_at: new Date()
+    };
+    if (!fallbackDb.enquiries) fallbackDb.enquiries = [];
+    fallbackDb.enquiries.push(newEnquiry);
+    saveFallbackDb();
+    return { rows: [newEnquiry], rowCount: 1 };
+  }
+
+  // UPDATE enquiries
+  if (lowerQuery.includes('update enquiries')) {
+    // UPDATE enquiries SET status = $1 WHERE id = $2 RETURNING *
+    let enquiryId = null;
+    const match = lowerQuery.match(/where id\s*=\s*\$(\d+)/);
+    if (match) {
+      enquiryId = parseInt(getParam(parseInt(match[1])));
+    }
+    const list = fallbackDb.enquiries || [];
+    const idx = list.findIndex(e => e.id === enquiryId);
+    if (idx !== -1) {
+      const item = list[idx];
+      item.status = getParam(1);
+      saveFallbackDb();
+      return { rows: [item], rowCount: 1 };
+    }
+    return { rows: [], rowCount: 0 };
+  }
+
+  // DELETE FROM enquiries
+  if (lowerQuery.includes('delete from enquiries')) {
+    const match = lowerQuery.match(/where id\s*=\s*\$(\d+)/);
+    let enquiryId = null;
+    if (match) {
+      enquiryId = parseInt(getParam(parseInt(match[1])));
+    }
+    const list = fallbackDb.enquiries || [];
+    const idx = list.findIndex(e => e.id === enquiryId);
+    if (idx !== -1) {
+      list.splice(idx, 1);
+      saveFallbackDb();
+      return { rowCount: 1 };
+    }
+    return { rowCount: 0 };
   }
 
   console.warn("UNHANDLED SIMULATED QUERY:", queryNormalized, "PARAMS:", params);

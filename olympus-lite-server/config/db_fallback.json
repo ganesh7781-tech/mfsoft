@@ -2,13 +2,13 @@
   "gym_profile": [
     {
       "id": 1,
-      "gym_name": "MUSCLE FACTORY",
-      "logo_url": "",
+      "gym_name": "MUSCLE FACTORY HUB",
+      "logo_url": "/uploads/logo-1783273751603.jpg",
       "contact_phone": "9876543210",
-      "address": "123 High Street, Olympus Peak",
-      "tax_percentage": 18,
+      "address": "boisar",
+      "tax_percentage": 0,
       "receipt_footer_text": "Thank you for training with us! Focus. Commit. Achieve.",
-      "updated_at": "2026-07-03T15:37:59.940Z"
+      "updated_at": "2026-07-05T17:49:11.606Z"
     }
   ],
   "users": [
@@ -22,89 +22,165 @@
   "members": [
     {
       "id": 1,
-      "first_name": "1 Month Plan",
-      "last_name": 30,
-      "mobile_number": 1200,
-      "email": false,
-      "date_of_birth": 1,
-      "height_cm": null,
-      "weight_kg": null,
-      "is_deleted": true,
-      "created_at": "2026-07-03T15:33:21.194Z"
+      "first_name": "Aman",
+      "last_name": "Sharma",
+      "mobile_number": "9876543211",
+      "email": "aman@gmail.com",
+      "date_of_birth": "1998-05-15",
+      "address": "A-404, Shanti Nagar, Mumbai",
+      "photo_url": null,
+      "height_cm": 178,
+      "weight_kg": 72,
+      "fitness_goal": "Muscle Gain",
+      "medical_notes": "None",
+      "emergency_contact": {
+        "name": "Ramesh Sharma",
+        "relation": "Father",
+        "phone": "9876543210"
+      },
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-06-30T10:00:00.000Z"
     },
     {
       "id": 2,
-      "first_name": "d",
-      "last_name": "d",
-      "mobile_number": "5353534652",
-      "email": "d",
-      "date_of_birth": null,
-      "address": "d",
-      "photo_url": null,
+      "first_name": 2,
       "height_cm": null,
       "weight_kg": null,
-      "fitness_goal": "General Fitness",
-      "medical_notes": null,
-      "emergency_contact": {
-        "name": "",
-        "relation": "",
-        "phone": ""
-      },
-      "status": "Active",
-      "is_deleted": true,
-      "created_at": "2026-07-03T15:35:50.039Z"
+      "is_deleted": false,
+      "created_at": "2026-06-10T11:00:00.000Z"
     },
     {
       "id": 3,
-      "first_name": 3,
-      "height_cm": null,
-      "weight_kg": null,
+      "first_name": "Neha",
+      "last_name": "Patel",
+      "mobile_number": "9876543233",
+      "email": "neha@gmail.com",
+      "date_of_birth": "1996-03-12",
+      "address": "C-102, Royal Residency, Ahmedabad",
+      "photo_url": null,
+      "height_cm": 165,
+      "weight_kg": 58,
+      "fitness_goal": "General Fitness",
+      "medical_notes": "Asthma",
+      "emergency_contact": {
+        "name": "Suresh Patel",
+        "relation": "Father",
+        "phone": "9876543230"
+      },
+      "status": "Expired",
       "is_deleted": false,
-      "created_at": "2026-07-03T15:55:08.046Z"
+      "created_at": "2026-05-25T09:30:00.000Z"
     },
     {
       "id": 4,
-      "first_name": "d",
-      "last_name": "d",
-      "mobile_number": "5353534652344",
-      "email": "d",
-      "date_of_birth": null,
-      "address": null,
+      "first_name": "Priya",
+      "last_name": "Singh",
+      "mobile_number": "9876543244",
+      "email": "priya@gmail.com",
+      "date_of_birth": "2001-11-05",
+      "address": "D-503, Silver Heights, Delhi",
       "photo_url": null,
-      "height_cm": null,
-      "weight_kg": null,
+      "height_cm": 168,
+      "weight_kg": 55,
       "fitness_goal": "General Fitness",
-      "medical_notes": null,
+      "medical_notes": "None",
       "emergency_contact": {
-        "name": "ganeshbhadane",
-        "relation": "",
-        "phone": "09307294733"
+        "name": "Sunita Singh",
+        "relation": "Mother",
+        "phone": "9876543240"
       },
       "status": "Active",
       "is_deleted": false,
-      "created_at": "2026-07-03T15:58:58.617Z"
+      "created_at": "2026-07-01T14:00:00.000Z"
     },
     {
       "id": 5,
-      "first_name": 3,
-      "last_name": 3,
-      "mobile_number": "2026-07-03",
-      "email": "2026-12-30",
-      "date_of_birth": 3500,
+      "first_name": "Ganesh",
+      "last_name": "Bhadane",
+      "mobile_number": "9876543255",
+      "email": "ganesh@gmail.com",
+      "date_of_birth": "1994-09-25",
+      "address": "E-302, Galaxy Apartments, Nashik",
+      "photo_url": null,
+      "height_cm": 172,
+      "weight_kg": 68,
+      "fitness_goal": "Muscle Gain",
+      "medical_notes": "None",
+      "emergency_contact": {
+        "name": "Kavita Bhadane",
+        "relation": "Wife",
+        "phone": "9876543250"
+      },
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-06-20T12:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "first_name": "Vikram",
+      "last_name": "Malhotra",
+      "mobile_number": "9876543266",
+      "email": "vikram@gmail.com",
+      "date_of_birth": "1992-07-18",
+      "address": "F-104, Sunrise Tower, Bangalore",
+      "photo_url": null,
+      "height_cm": 176,
+      "weight_kg": 74,
+      "fitness_goal": "General Fitness",
+      "medical_notes": "None",
+      "emergency_contact": {
+        "name": "Aarti Malhotra",
+        "relation": "Sister",
+        "phone": "9876543260"
+      },
+      "status": "Unassigned",
+      "is_deleted": false,
+      "created_at": "2026-07-04T16:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "first_name": "Karan",
+      "last_name": "Johar",
+      "mobile_number": "9876543277",
+      "email": "karan@gmail.com",
+      "date_of_birth": "1990-10-10",
+      "address": "G-501, Film City, Mumbai",
+      "photo_url": null,
+      "height_cm": 174,
+      "weight_kg": 76,
+      "fitness_goal": "General Fitness",
+      "medical_notes": "None",
+      "emergency_contact": {
+        "name": "Yash Johar",
+        "relation": "Father",
+        "phone": "9876543270"
+      },
+      "status": "Expired",
+      "is_deleted": false,
+      "created_at": "2026-06-03T15:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "first_name": 2,
+      "last_name": 4,
+      "mobile_number": "2026-07-11",
+      "email": "2027-07-11",
+      "date_of_birth": 6000,
       "height_cm": null,
       "weight_kg": null,
       "status": "Active",
       "is_deleted": false,
-      "created_at": "2026-07-03T16:06:22.951Z"
+      "created_at": "2026-07-05T17:48:39.318Z"
     },
     {
-      "id": 6,
-      "first_name": "sd",
-      "last_name": "cd",
-      "mobile_number": "2323232323232",
-      "email": null,
+      "id": 9,
+      "first_name": "bapu",
+      "last_name": "bhamre",
+      "mobile_number": "53535346523",
+      "email": "gulab7769948518@gmail.com",
       "date_of_birth": null,
-      "address": null,
+      "address": "v",
       "photo_url": null,
       "height_cm": null,
       "weight_kg": null,
@@ -117,20 +193,196 @@
       },
       "status": "Active",
       "is_deleted": false,
-      "created_at": "2026-07-03T16:17:20.409Z"
+      "created_at": "2026-07-05T17:51:41.985Z"
     },
     {
-      "id": 7,
-      "first_name": 6,
-      "last_name": 2,
-      "mobile_number": "2026-07-03",
-      "email": "2026-10-01",
-      "date_of_birth": 2500,
+      "id": 10,
+      "first_name": 9,
+      "last_name": 1,
+      "mobile_number": "2026-07-05",
+      "email": "2026-08-04",
+      "date_of_birth": 1200,
       "height_cm": null,
       "weight_kg": null,
       "status": "Active",
       "is_deleted": false,
-      "created_at": "2026-07-03T16:17:20.411Z"
+      "created_at": "2026-07-05T17:51:41.987Z"
+    },
+    {
+      "id": 11,
+      "first_name": "Rahul",
+      "last_name": "Verma",
+      "mobile_number": "9876543288",
+      "email": "rahul@gmail.com",
+      "date_of_birth": "1995-04-12",
+      "address": "B-201, Maple Heights, Pune",
+      "photo_url": null,
+      "height_cm": 180,
+      "weight_kg": 82,
+      "fitness_goal": "Muscle Gain",
+      "medical_notes": "None",
+      "emergency_contact": {
+        "name": "Sunil Verma",
+        "relation": "Father",
+        "phone": "9876543280"
+      },
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-06-25T11:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "first_name": "Komal",
+      "last_name": "Rao",
+      "mobile_number": "9876543299",
+      "email": "komal.rao@yahoo.com",
+      "date_of_birth": "1997-09-30",
+      "address": "Flat 4B, Oasis enclave, Bangalore",
+      "photo_url": null,
+      "height_cm": 162,
+      "weight_kg": 54,
+      "fitness_goal": "Weight Loss",
+      "medical_notes": "Thyroid",
+      "emergency_contact": {
+        "name": "Amit Rao",
+        "relation": "Husband",
+        "phone": "9876543290"
+      },
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-07-02T14:30:00.000Z"
+    },
+    {
+      "id": 13,
+      "first_name": "Rohan",
+      "last_name": "Joshi",
+      "mobile_number": "9876543300",
+      "email": "rohanjoshi@gmail.com",
+      "date_of_birth": "1992-12-05",
+      "address": "702/C, Silver Oaks, Mumbai",
+      "photo_url": null,
+      "height_cm": 175,
+      "weight_kg": 78,
+      "fitness_goal": "General Fitness",
+      "medical_notes": "None",
+      "emergency_contact": {
+        "name": "Seema Joshi",
+        "relation": "Mother",
+        "phone": "9876543301"
+      },
+      "status": "Expired",
+      "is_deleted": false,
+      "created_at": "2026-05-01T09:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "first_name": "Anjali",
+      "last_name": "Desai",
+      "mobile_number": "9876543311",
+      "email": "anjali.d@gmail.com",
+      "date_of_birth": "1999-01-20",
+      "address": "Row House No. 5, Rose Garden, Thane",
+      "photo_url": null,
+      "height_cm": 167,
+      "weight_kg": 60,
+      "fitness_goal": "Tone Body",
+      "medical_notes": "None",
+      "emergency_contact": {
+        "name": "Vijay Desai",
+        "relation": "Father",
+        "phone": "9876543312"
+      },
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-07-03T08:15:00.000Z"
+    },
+    {
+      "id": 15,
+      "first_name": "Suresh",
+      "last_name": "Nair",
+      "mobile_number": "9876543322",
+      "email": "suresh.nair@outlook.com",
+      "date_of_birth": "1988-06-15",
+      "address": "Plot 42, Sector 15, Navi Mumbai",
+      "photo_url": null,
+      "height_cm": 182,
+      "weight_kg": 85,
+      "fitness_goal": "Strength Training",
+      "medical_notes": "High Blood Pressure",
+      "emergency_contact": {
+        "name": "Mini Nair",
+        "relation": "Wife",
+        "phone": "9876543320"
+      },
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-06-10T10:00:00.000Z"
+    },
+    {
+      "id": 16,
+      "first_name": "Vikram",
+      "last_name": "Rathore",
+      "mobile_number": "9876543333",
+      "email": "vikram.rathore@gmail.com",
+      "date_of_birth": "1993-08-22",
+      "address": "12, Palace View Apartments, Jaipur",
+      "photo_url": null,
+      "height_cm": 177,
+      "weight_kg": 73,
+      "fitness_goal": "Muscle Gain",
+      "medical_notes": "None",
+      "emergency_contact": {
+        "name": "Kiran Rathore",
+        "relation": "Sister",
+        "phone": "9876543330"
+      },
+      "status": "Expired",
+      "is_deleted": false,
+      "created_at": "2026-04-15T15:00:00.000Z"
+    },
+    {
+      "id": 17,
+      "first_name": "Simran",
+      "last_name": "Kaur",
+      "mobile_number": "9876543344",
+      "email": "simran.kaur@gmail.com",
+      "date_of_birth": "2000-02-14",
+      "address": "H.No 124, Phase 3B1, Mohali",
+      "photo_url": null,
+      "height_cm": 170,
+      "weight_kg": 62,
+      "fitness_goal": "Cardio & Weight Loss",
+      "medical_notes": "Knee Injury (Past)",
+      "emergency_contact": {
+        "name": "Harpreet Kaur",
+        "relation": "Mother",
+        "phone": "9876543340"
+      },
+      "status": "Unassigned",
+      "is_deleted": false,
+      "created_at": "2026-07-05T12:00:00.000Z"
+    },
+    {
+      "id": 18,
+      "first_name": "Aditya",
+      "last_name": "Goel",
+      "mobile_number": "9876543355",
+      "email": "aditya.goel@gmail.com",
+      "date_of_birth": "1996-10-08",
+      "address": "E-15, Green Park Main, Delhi",
+      "photo_url": null,
+      "height_cm": 173,
+      "weight_kg": 70,
+      "fitness_goal": "General Fitness",
+      "medical_notes": "None",
+      "emergency_contact": {
+        "name": "Pradeep Goel",
+        "relation": "Father",
+        "phone": "9876543350"
+      },
+      "status": "Active",
+      "is_deleted": false,
+      "created_at": "2026-07-04T17:00:00.000Z"
     }
   ],
   "membership_plans": [
@@ -163,7 +415,125 @@
       "is_active": true
     }
   ],
-  "membership_history": [],
+  "membership_history": [
+    {
+      "id": 1,
+      "member_id": 1,
+      "plan_id": 1,
+      "joining_date": "2026-06-30",
+      "expiry_date": "2026-07-30",
+      "purchase_price": 1200,
+      "created_at": "2026-06-30T10:05:00.000Z"
+    },
+    {
+      "id": 2,
+      "member_id": 2,
+      "plan_id": 1,
+      "joining_date": "2026-06-10",
+      "expiry_date": "2026-07-10",
+      "purchase_price": 1200,
+      "created_at": "2026-06-10T11:05:00.000Z"
+    },
+    {
+      "id": 3,
+      "member_id": 3,
+      "plan_id": 1,
+      "joining_date": "2026-05-25",
+      "expiry_date": "2026-06-25",
+      "purchase_price": 1200,
+      "created_at": "2026-05-25T09:35:00.000Z"
+    },
+    {
+      "id": 4,
+      "member_id": 4,
+      "plan_id": 3,
+      "joining_date": "2026-07-01",
+      "expiry_date": "2026-12-28",
+      "purchase_price": 3500,
+      "created_at": "2026-07-01T14:05:00.000Z"
+    },
+    {
+      "id": 5,
+      "member_id": 5,
+      "plan_id": 1,
+      "joining_date": "2026-06-20",
+      "expiry_date": "2026-07-20",
+      "purchase_price": 1200,
+      "created_at": "2026-06-20T12:05:00.000Z"
+    },
+    {
+      "id": 6,
+      "member_id": 7,
+      "plan_id": 1,
+      "joining_date": "2026-06-03",
+      "expiry_date": "2026-07-03",
+      "purchase_price": 1200,
+      "created_at": "2026-06-03T15:05:00.000Z"
+    },
+    {
+      "id": 7,
+      "member_id": 11,
+      "plan_id": 2,
+      "joining_date": "2026-06-25",
+      "expiry_date": "2026-09-23",
+      "purchase_price": 2500,
+      "created_at": "2026-06-25T11:05:00.000Z"
+    },
+    {
+      "id": 8,
+      "member_id": 12,
+      "plan_id": 1,
+      "joining_date": "2026-07-02",
+      "expiry_date": "2026-08-01",
+      "purchase_price": 1200,
+      "created_at": "2026-07-02T14:35:00.000Z"
+    },
+    {
+      "id": 9,
+      "member_id": 13,
+      "plan_id": 1,
+      "joining_date": "2026-05-01",
+      "expiry_date": "2026-05-31",
+      "purchase_price": 1200,
+      "created_at": "2026-05-01T09:05:00.000Z"
+    },
+    {
+      "id": 10,
+      "member_id": 14,
+      "plan_id": 3,
+      "joining_date": "2026-07-03",
+      "expiry_date": "2026-12-30",
+      "purchase_price": 3500,
+      "created_at": "2026-07-03T08:20:00.000Z"
+    },
+    {
+      "id": 11,
+      "member_id": 15,
+      "plan_id": 1,
+      "joining_date": "2026-06-10",
+      "expiry_date": "2026-07-10",
+      "purchase_price": 1200,
+      "created_at": "2026-06-10T10:05:00.000Z"
+    },
+    {
+      "id": 12,
+      "member_id": 16,
+      "plan_id": 1,
+      "joining_date": "2026-04-15",
+      "expiry_date": "2026-05-15",
+      "purchase_price": 1200,
+      "created_at": "2026-04-15T15:05:00.000Z"
+    },
+    {
+      "id": 13,
+      "member_id": 18,
+      "plan_id": 1,
+      "joining_date": "2026-07-04",
+      "expiry_date": "2026-08-03",
+      "purchase_price": 1200,
+      "created_at": "2026-07-04T17:05:00.000Z"
+    }
+  ],
   "products": [
     {
       "id": 1,
@@ -171,7 +541,7 @@
       "category": "Supplements",
       "cost_price": 2200,
       "selling_price": 3200,
-      "stock_qty": 10,
+      "stock_qty": 9,
       "low_stock_threshold": 5,
       "is_active": true
     },
@@ -184,221 +554,642 @@
       "stock_qty": 5,
       "low_stock_threshold": 3,
       "is_active": true
-    },
-    {
-      "id": 3,
-      "product_name": "Energy Drink",
-      "category": "Drinks",
-      "cost_price": 60,
-      "selling_price": 100,
-      "stock_qty": 0,
-      "low_stock_threshold": 10,
-      "is_active": true
-    },
-    {
-      "id": 4,
-      "product_name": "Gym Shaker Bottle",
-      "category": "Equipment",
-      "cost_price": 150,
-      "selling_price": 300,
-      "stock_qty": 25,
-      "low_stock_threshold": 5,
-      "is_active": true
     }
   ],
   "invoices": [
     {
       "id": 1,
       "member_id": 1,
-      "invoice_type": "Store",
-      "total_amount": 3776,
-      "tax_amount": 576,
-      "amount_paid": 3200,
-      "balance_due": 576,
-      "payment_method": "Card",
-      "payment_status": "Partially Paid",
-      "due_date": "2026-07-03",
-      "created_at": "2026-07-03T15:33:21.208Z"
+      "invoice_type": "Membership",
+      "total_amount": 1416,
+      "tax_amount": 216,
+      "amount_paid": 1416,
+      "balance_due": 0,
+      "payment_method": "UPI",
+      "payment_status": "Fully Paid",
+      "due_date": "2026-06-30",
+      "created_at": "2026-06-30T10:05:00.000Z"
     },
     {
       "id": 2,
-      "member_id": 1,
-      "invoice_type": "Store",
-      "total_amount": 3776,
-      "tax_amount": 576,
-      "amount_paid": 3200,
-      "balance_due": 576,
-      "payment_method": "Card",
-      "payment_status": "Partially Paid",
-      "due_date": "2026-07-03",
-      "created_at": "2026-07-03T15:33:56.742Z"
+      "member_id": 2,
+      "invoice_type": "Membership",
+      "total_amount": 1416,
+      "tax_amount": 216,
+      "amount_paid": 1416,
+      "balance_due": 0,
+      "payment_method": "Cash",
+      "payment_status": "Fully Paid",
+      "due_date": "2026-06-10",
+      "created_at": "2026-06-10T11:05:00.000Z",
+      "payment_history": [
+        {
+          "amount": 416,
+          "date": "2026-06-10T11:05:00.000Z",
+          "method": "Cash",
+          "note": "Initial Payment"
+        },
+        {
+          "amount": 499.95,
+          "date": "2026-07-05T18:00:25.009Z",
+          "method": "UPI",
+          "note": "Dues Payment"
+        },
+        {
+          "amount": 500.05,
+          "date": "2026-07-05T18:00:52.447Z",
+          "method": "Cash",
+          "note": "Dues Payment"
+        }
+      ]
     },
     {
       "id": 3,
-      "member_id": null,
-      "invoice_type": "Store",
-      "total_amount": 5900,
-      "tax_amount": 900,
-      "amount_paid": 5605,
-      "balance_due": 295,
+      "member_id": 3,
+      "invoice_type": "Membership",
+      "total_amount": 1416,
+      "tax_amount": 216,
+      "amount_paid": 1416,
+      "balance_due": 0,
       "payment_method": "Cash",
-      "payment_status": "Partially Paid",
-      "due_date": "2026-07-03",
-      "created_at": "2026-07-03T15:42:50.985Z"
+      "payment_status": "Fully Paid",
+      "due_date": "2026-05-25",
+      "created_at": "2026-05-25T09:35:00.000Z"
     },
     {
       "id": 4,
-      "member_id": null,
-      "invoice_type": "Store",
-      "total_amount": 8496,
-      "tax_amount": 1296,
-      "amount_paid": 6796.8,
-      "balance_due": 1699.1999999999998,
-      "payment_method": "Cash",
-      "payment_status": "Partially Paid",
-      "due_date": "2026-07-03",
-      "created_at": "2026-07-03T15:48:25.106Z"
-    },
-    {
-      "id": 5,
-      "member_id": 1,
-      "invoice_type": "Store",
-      "total_amount": 3776,
-      "tax_amount": 576,
-      "amount_paid": 3200,
-      "balance_due": 576,
-      "payment_method": "Card",
-      "payment_status": "Partially Paid",
-      "due_date": "2026-07-03",
-      "created_at": "2026-07-03T15:49:05.252Z"
-    },
-    {
-      "id": 6,
-      "member_id": 3,
+      "member_id": 4,
       "invoice_type": "Membership",
       "total_amount": 4130,
       "tax_amount": 630,
-      "amount_paid": 0,
-      "balance_due": 4130,
+      "amount_paid": 4130,
+      "balance_due": 0,
       "payment_method": "UPI",
-      "payment_status": "Unpaid",
-      "due_date": "2026-12-30",
-      "created_at": "2026-07-03T16:06:22.952Z"
+      "payment_status": "Fully Paid",
+      "due_date": "2026-07-01",
+      "created_at": "2026-07-01T14:05:00.000Z"
+    },
+    {
+      "id": 5,
+      "member_id": 5,
+      "invoice_type": "Membership",
+      "total_amount": 1416,
+      "tax_amount": 216,
+      "amount_paid": 1416,
+      "balance_due": 0,
+      "payment_method": "UPI",
+      "payment_status": "Fully Paid",
+      "due_date": "2026-06-20",
+      "created_at": "2026-06-20T12:05:00.000Z",
+      "payment_history": [
+        {
+          "amount": 1415.97,
+          "date": "2026-06-20T12:05:00.000Z",
+          "method": "Cash",
+          "note": "Initial Payment"
+        },
+        {
+          "amount": 0.029999999999972715,
+          "date": "2026-07-05T17:59:39.812Z",
+          "method": "UPI",
+          "note": "Dues Payment"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "member_id": 7,
+      "invoice_type": "Membership",
+      "total_amount": 1416,
+      "tax_amount": 216,
+      "amount_paid": 1416,
+      "balance_due": 0,
+      "payment_method": "Cash",
+      "payment_status": "Fully Paid",
+      "due_date": "2026-06-03",
+      "created_at": "2026-06-03T15:05:00.000Z",
+      "payment_history": [
+        {
+          "amount": 216,
+          "date": "2026-06-03T15:05:00.000Z",
+          "method": "Cash",
+          "note": "Initial Payment"
+        },
+        {
+          "amount": 1200,
+          "date": "2026-07-05T18:02:23.124Z",
+          "method": "Cash",
+          "note": "Dues Payment"
+        }
+      ]
     },
     {
       "id": 7,
-      "member_id": 6,
+      "member_id": 2,
+      "invoice_type": "Membership",
+      "total_amount": 7080,
+      "tax_amount": 1080,
+      "amount_paid": 7080,
+      "balance_due": 0,
+      "payment_method": "Cash",
+      "payment_status": "Fully Paid",
+      "due_date": "2027-07-11",
+      "created_at": "2026-07-05T17:48:39.327Z"
+    },
+    {
+      "id": 8,
+      "member_id": null,
+      "invoice_type": "Store",
+      "total_amount": 3200,
+      "tax_amount": 0,
+      "amount_paid": 3200,
+      "balance_due": 0,
+      "payment_method": "Cash",
+      "payment_status": "Fully Paid",
+      "due_date": null,
+      "created_at": "2026-07-05T17:49:21.669Z"
+    },
+    {
+      "id": 9,
+      "member_id": 9,
+      "invoice_type": "Membership",
+      "total_amount": 1200,
+      "tax_amount": 0,
+      "amount_paid": 1200,
+      "balance_due": 0,
+      "payment_method": "Cash",
+      "payment_status": "Fully Paid",
+      "due_date": null,
+      "created_at": "2026-07-05T17:51:41.990Z"
+    },
+    {
+      "id": 10,
+      "member_id": 11,
       "invoice_type": "Membership",
       "total_amount": 2950,
       "tax_amount": 450,
-      "amount_paid": 2500,
-      "balance_due": 450,
+      "amount_paid": 2950,
+      "balance_due": 0,
+      "payment_method": "UPI",
+      "payment_status": "Fully Paid",
+      "due_date": "2026-06-25",
+      "created_at": "2026-06-25T11:05:00.000Z"
+    },
+    {
+      "id": 11,
+      "member_id": 12,
+      "invoice_type": "Membership",
+      "total_amount": 1416,
+      "tax_amount": 216,
+      "amount_paid": 1416,
+      "balance_due": 0,
+      "payment_method": "Card",
+      "payment_status": "Fully Paid",
+      "due_date": "2026-07-02",
+      "created_at": "2026-07-02T14:35:00.000Z"
+    },
+    {
+      "id": 12,
+      "member_id": 13,
+      "invoice_type": "Membership",
+      "total_amount": 1416,
+      "tax_amount": 216,
+      "amount_paid": 1416,
+      "balance_due": 0,
+      "payment_method": "Cash",
+      "payment_status": "Fully Paid",
+      "due_date": "2026-05-01",
+      "created_at": "2026-05-01T09:05:00.000Z"
+    },
+    {
+      "id": 13,
+      "member_id": 14,
+      "invoice_type": "Membership",
+      "total_amount": 4130,
+      "tax_amount": 630,
+      "amount_paid": 4130,
+      "balance_due": 0,
+      "payment_method": "UPI",
+      "payment_status": "Fully Paid",
+      "due_date": "2026-07-03",
+      "created_at": "2026-07-03T08:20:00.000Z"
+    },
+    {
+      "id": 14,
+      "member_id": 15,
+      "invoice_type": "Membership",
+      "total_amount": 1416,
+      "tax_amount": 216,
+      "amount_paid": 1000,
+      "balance_due": 416,
       "payment_method": "Cash",
       "payment_status": "Partially Paid",
-      "due_date": "2026-10-01",
-      "created_at": "2026-07-03T16:17:20.413Z"
+      "due_date": "2026-07-10",
+      "created_at": "2026-06-10T10:05:00.000Z",
+      "payment_history": [
+        {
+          "amount": 1000,
+          "date": "2026-06-10T10:05:00.000Z",
+          "method": "Cash",
+          "note": "Initial Partial Payment"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "member_id": null,
+      "invoice_type": "Store",
+      "total_amount": 3200,
+      "tax_amount": 0,
+      "amount_paid": 3200,
+      "balance_due": 0,
+      "payment_method": "UPI",
+      "payment_status": "Fully Paid",
+      "due_date": null,
+      "created_at": "2026-07-05T10:15:00.000Z"
+    },
+    {
+      "id": 16,
+      "member_id": 18,
+      "invoice_type": "Membership",
+      "total_amount": 1416,
+      "tax_amount": 216,
+      "amount_paid": 1416,
+      "balance_due": 0,
+      "payment_method": "UPI",
+      "payment_status": "Fully Paid",
+      "due_date": "2026-07-04",
+      "created_at": "2026-07-04T17:05:00.000Z"
+    },
+    {
+      "id": 17,
+      "member_id": 11,
+      "invoice_type": "Store",
+      "total_amount": 1800,
+      "tax_amount": 0,
+      "amount_paid": 1800,
+      "balance_due": 0,
+      "payment_method": "Card",
+      "payment_status": "Fully Paid",
+      "due_date": null,
+      "created_at": "2026-07-05T15:30:00.000Z"
     }
   ],
   "invoice_items": [
     {
       "id": 1,
       "invoice_id": 1,
-      "product_id": 1,
-      "description": "Whey Protein 1kg",
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
       "quantity": 1,
-      "unit_price": 3200,
-      "total_price": 3200,
-      "created_at": "2026-07-03T15:33:21.209Z"
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-06-30T10:05:00.000Z"
     },
     {
       "id": 2,
       "invoice_id": 2,
-      "product_id": 1,
-      "description": "Whey Protein 1kg",
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
       "quantity": 1,
-      "unit_price": 3200,
-      "total_price": 3200,
-      "created_at": "2026-07-03T15:33:56.744Z"
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-06-10T11:05:00.000Z"
     },
     {
       "id": 3,
       "invoice_id": 3,
-      "product_id": 1,
-      "description": "Whey Protein 1kg",
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
       "quantity": 1,
-      "unit_price": 3200,
-      "total_price": 3200,
-      "created_at": "2026-07-03T15:42:50.986Z"
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-05-25T09:35:00.000Z"
     },
     {
       "id": 4,
-      "invoice_id": 3,
-      "product_id": 2,
-      "description": "BCAA Powder",
-      "quantity": 1,
-      "unit_price": 1800,
-      "total_price": 1800,
-      "created_at": "2026-07-03T15:42:50.989Z"
-    },
-    {
-      "id": 5,
       "invoice_id": 4,
-      "product_id": 1,
-      "description": "Whey Protein 1kg",
-      "quantity": 1,
-      "unit_price": 3200,
-      "total_price": 3200,
-      "created_at": "2026-07-03T15:48:25.107Z"
-    },
-    {
-      "id": 6,
-      "invoice_id": 4,
-      "product_id": 2,
-      "description": "BCAA Powder",
-      "quantity": 2,
-      "unit_price": 1800,
-      "total_price": 3600,
-      "created_at": "2026-07-03T15:48:25.111Z"
-    },
-    {
-      "id": 7,
-      "invoice_id": 4,
-      "product_id": 3,
-      "description": "Energy Drink",
-      "quantity": 4,
-      "unit_price": 100,
-      "total_price": 400,
-      "created_at": "2026-07-03T15:48:25.113Z"
-    },
-    {
-      "id": 8,
-      "invoice_id": 5,
-      "product_id": 1,
-      "description": "Whey Protein 1kg",
-      "quantity": 1,
-      "unit_price": 3200,
-      "total_price": 3200,
-      "created_at": "2026-07-03T15:49:05.253Z"
-    },
-    {
-      "id": 9,
-      "invoice_id": 6,
       "product_id": null,
-      "description": "Membership Renewal: 6 Months Plan (180 Days)",
+      "description": "Membership Plan: 6 Months Plan (180 Days)",
       "quantity": 1,
       "unit_price": 3500,
       "total_price": 3500,
-      "created_at": "2026-07-03T16:06:22.952Z"
+      "created_at": "2026-07-01T14:05:00.000Z"
+    },
+    {
+      "id": 5,
+      "invoice_id": 5,
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
+      "quantity": 1,
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-06-20T12:05:00.000Z"
+    },
+    {
+      "id": 6,
+      "invoice_id": 6,
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
+      "quantity": 1,
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-06-03T15:05:00.000Z"
+    },
+    {
+      "id": 7,
+      "invoice_id": 7,
+      "product_id": null,
+      "description": "Membership Renewal: 12 Months Plan (365 Days)",
+      "quantity": 1,
+      "unit_price": 6000,
+      "total_price": 6000,
+      "created_at": "2026-07-05T17:48:39.331Z"
+    },
+    {
+      "id": 8,
+      "invoice_id": 8,
+      "product_id": 1,
+      "description": "Whey Protein 1kg",
+      "quantity": 1,
+      "unit_price": 3200,
+      "total_price": 3200,
+      "created_at": "2026-07-05T17:49:21.671Z"
+    },
+    {
+      "id": 9,
+      "invoice_id": 9,
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
+      "quantity": 1,
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-07-05T17:51:41.991Z"
     },
     {
       "id": 10,
-      "invoice_id": 7,
+      "invoice_id": 10,
       "product_id": null,
       "description": "Membership Plan: 3 Months Plan (90 Days)",
       "quantity": 1,
       "unit_price": 2500,
       "total_price": 2500,
-      "created_at": "2026-07-03T16:17:20.415Z"
+      "created_at": "2026-06-25T11:05:00.000Z"
+    },
+    {
+      "id": 11,
+      "invoice_id": 11,
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
+      "quantity": 1,
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-07-02T14:35:00.000Z"
+    },
+    {
+      "id": 12,
+      "invoice_id": 12,
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
+      "quantity": 1,
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-05-01T09:05:00.000Z"
+    },
+    {
+      "id": 13,
+      "invoice_id": 13,
+      "product_id": null,
+      "description": "Membership Plan: 6 Months Plan (180 Days)",
+      "quantity": 1,
+      "unit_price": 3500,
+      "total_price": 3500,
+      "created_at": "2026-07-03T08:20:00.000Z"
+    },
+    {
+      "id": 14,
+      "invoice_id": 14,
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
+      "quantity": 1,
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-06-10T10:05:00.000Z"
+    },
+    {
+      "id": 15,
+      "invoice_id": 15,
+      "product_id": 1,
+      "description": "Whey Protein 1kg",
+      "quantity": 1,
+      "unit_price": 3200,
+      "total_price": 3200,
+      "created_at": "2026-07-05T10:15:00.000Z"
+    },
+    {
+      "id": 16,
+      "invoice_id": 16,
+      "product_id": null,
+      "description": "Membership Plan: 1 Month Plan (30 Days)",
+      "quantity": 1,
+      "unit_price": 1200,
+      "total_price": 1200,
+      "created_at": "2026-07-04T17:05:00.000Z"
+    },
+    {
+      "id": 17,
+      "invoice_id": 17,
+      "product_id": 2,
+      "description": "BCAA Powder",
+      "quantity": 1,
+      "unit_price": 1800,
+      "total_price": 1800,
+      "created_at": "2026-07-05T15:30:00.000Z"
+    }
+  ],
+  "expenses": [
+    {
+      "id": 1,
+      "title": "Monthly Gym Rent",
+      "amount": 15000,
+      "category": "Rent",
+      "expense_date": "2026-07-01",
+      "notes": "Building space rent",
+      "created_at": "2026-07-01T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "Treadmill Motor Repairing",
+      "amount": 3500,
+      "category": "Maintenance",
+      "expense_date": "2026-07-02",
+      "notes": "Repaired secondary treadmill roller motor by technician",
+      "created_at": "2026-07-02T12:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "Electricity Bill June",
+      "amount": 12450,
+      "category": "Utilities",
+      "expense_date": "2026-07-03",
+      "notes": "Main power grid connection bill paid online",
+      "created_at": "2026-07-03T10:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "title": "Software Subscription Fee",
+      "amount": 1500,
+      "category": "Software",
+      "expense_date": "2026-07-01",
+      "notes": "Monthly management dashboard CRM software subscription bill",
+      "created_at": "2026-07-01T09:30:00.000Z"
+    },
+    {
+      "id": 5,
+      "title": "Trainer Salary (Ramesh)",
+      "amount": 18000,
+      "category": "Salaries",
+      "expense_date": "2026-07-05",
+      "notes": "Monthly salary paid to junior gym fitness trainer Ramesh",
+      "created_at": "2026-07-05T18:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "title": "Water Dispenser Cans",
+      "amount": 800,
+      "category": "Supplies",
+      "expense_date": "2026-07-04",
+      "notes": "Purchased 20 water jars for gym client dispenser unit",
+      "created_at": "2026-07-04T11:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "title": "Floor Cleaning Supplies",
+      "amount": 1200,
+      "category": "Supplies",
+      "expense_date": "2026-07-03",
+      "notes": "Floor disinfectant, sanitizers, and microfiber cleaning towels",
+      "created_at": "2026-07-03T14:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "title": "Dumbbell Rack Welds",
+      "amount": 2200,
+      "category": "Maintenance",
+      "expense_date": "2026-07-04",
+      "notes": "Re-welding joints of dumbbell weight holding shelves",
+      "created_at": "2026-07-04T15:30:00.000Z"
+    },
+    {
+      "id": 9,
+      "title": "Marketing Flyers Printing",
+      "amount": 4500,
+      "category": "Marketing",
+      "expense_date": "2026-07-05",
+      "notes": "Printed 1000 flyers for distribution inside nearby residential areas",
+      "created_at": "2026-07-05T16:00:00.000Z"
+    }
+  ],
+  "enquiries": [
+    {
+      "id": 1,
+      "full_name": "ganeshbhadane",
+      "email": "neha@gmail.com",
+      "phone": "09307294733",
+      "message": "",
+      "source": "Website",
+      "status": "Ignored",
+      "created_at": "2026-07-05T18:22:38.071Z"
+    },
+    {
+      "id": 2,
+      "full_name": "Patel",
+      "email": "neha@gmail.com",
+      "phone": "9876543233",
+      "message": "",
+      "source": "Instagram",
+      "status": "Converted",
+      "created_at": "2026-07-05T18:22:46.712Z"
+    },
+    {
+      "id": 3,
+      "full_name": "Rahul Sen",
+      "email": "rahulsen@gmail.com",
+      "phone": "9876543401",
+      "message": "Interested in the 3 months bodybuilding package. Do you have personal trainers?",
+      "source": "Website",
+      "status": "New",
+      "created_at": "2026-07-05T10:30:00.000Z"
+    },
+    {
+      "id": 4,
+      "full_name": "Shalini Sharma",
+      "email": "shalini@yahoo.com",
+      "phone": "9876543402",
+      "message": "Do you offer couples discounts for annual memberships?",
+      "source": "Instagram",
+      "status": "Contacted",
+      "created_at": "2026-07-04T14:45:00.000Z"
+    },
+    {
+      "id": 5,
+      "full_name": "Manish Pandey",
+      "email": "manish.pandey@gmail.com",
+      "phone": "9876543403",
+      "message": "What are the early morning slot timings? Is the gym open on Sundays?",
+      "source": "WhatsApp",
+      "status": "New",
+      "created_at": "2026-07-06T06:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "full_name": "Karan Johar",
+      "email": "karan.johar@gmail.com",
+      "phone": "9876543404",
+      "message": "Referred by Aman Sharma. Wanting to check plans.",
+      "source": "Referral",
+      "status": "Converted",
+      "created_at": "2026-07-03T11:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "full_name": "Pooja Hegde",
+      "email": "pooja.h@outlook.com",
+      "phone": "9876543405",
+      "message": "Interested in Yoga and cardio classes. Do you have slot timings list?",
+      "source": "Website",
+      "status": "New",
+      "created_at": "2026-07-05T16:20:00.000Z"
+    },
+    {
+      "id": 8,
+      "full_name": "Kabir Singh",
+      "email": "kabir.singh@gmail.com",
+      "phone": "9876543406",
+      "message": "Looking for heavy weight sections and squat racks availability. What brand equipment do you use?",
+      "source": "Facebook",
+      "status": "Contacted",
+      "created_at": "2026-07-04T09:15:00.000Z"
+    },
+    {
+      "id": 9,
+      "full_name": "Rhea Sen",
+      "email": "rhea.sen@gmail.com",
+      "phone": "9876543407",
+      "message": "I want to start from next Monday. Please share package options.",
+      "source": "Instagram",
+      "status": "New",
+      "created_at": "2026-07-05T20:30:00.000Z"
+    },
+    {
+      "id": 10,
+      "full_name": "Deepak Rawat",
+      "email": "deepak.rawat@gmail.com",
+      "phone": "9876543408",
+      "message": "Wanted to know pricing. Please call me.",
+      "source": "WhatsApp",
+      "status": "Ignored",
+      "created_at": "2026-07-01T12:00:00.000Z"
     }
   ]
 }

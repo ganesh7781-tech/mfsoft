@@ -1,4 +1,4 @@
-import { Users, UserCheck, UserX, DollarSign, Calendar, AlertTriangle, ShoppingCart, TrendingUp } from 'lucide-react';
+import { Users, UserCheck, UserX, DollarSign, Calendar, AlertTriangle } from 'lucide-react';
 
 interface MetricsProps {
   metrics: {
@@ -10,11 +10,17 @@ interface MetricsProps {
     membership_revenue_month: number;
     store_revenue_today: number;
     store_revenue_month: number;
+    total_expenses_month?: number;
+    net_profit_month?: number;
   };
   onCardClick?: (filter: string) => void;
 }
 
 export default function DashboardMetrics({ metrics, onCardClick }: MetricsProps) {
+  const todayCollection = (metrics.membership_revenue_today || 0) + (metrics.store_revenue_today || 0);
+  const monthlyRevenue = (metrics.membership_revenue_month || 0) + (metrics.store_revenue_month || 0);
+  const inactiveMembers = (metrics.total_members || 0) - (metrics.active_members || 0);
+
   const cards = [
     {
       title: 'Total Members',
@@ -33,12 +39,12 @@ export default function DashboardMetrics({ metrics, onCardClick }: MetricsProps)
       filterKey: 'active',
     },
     {
-      title: 'Expired Members',
-      value: metrics.expired_members,
+      title: 'Inactive Members',
+      value: inactiveMembers,
       icon: UserX,
       color: 'from-rose-500 to-pink-500',
       shadow: 'shadow-rose-500/5',
-      filterKey: 'expired',
+      filterKey: 'inactive',
     },
     {
       title: 'Pending Payments',
@@ -49,41 +55,25 @@ export default function DashboardMetrics({ metrics, onCardClick }: MetricsProps)
       filterKey: 'pending',
     },
     {
-      title: 'Membership Today',
-      value: `₹${metrics.membership_revenue_today.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
-      icon: TrendingUp,
+      title: "Today's Collection",
+      value: `₹${todayCollection.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+      icon: DollarSign,
       color: 'from-orange-500 via-amber-500 to-yellow-500',
       shadow: 'shadow-orange-500/5',
       filterKey: 'revenue-today',
     },
     {
-      title: 'Membership Month',
-      value: `₹${metrics.membership_revenue_month.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+      title: 'Monthly Revenue',
+      value: `₹${monthlyRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
       icon: Calendar,
       color: 'from-violet-500 to-purple-500',
       shadow: 'shadow-violet-500/5',
       filterKey: 'revenue-month',
     },
-    {
-      title: 'Store POS Today',
-      value: `₹${metrics.store_revenue_today.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
-      icon: DollarSign,
-      color: 'from-emerald-500 to-cyan-500',
-      shadow: 'shadow-cyan-500/5',
-      filterKey: 'store-today',
-    },
-    {
-      title: 'Store POS Month',
-      value: `₹${metrics.store_revenue_month.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
-      icon: ShoppingCart,
-      color: 'from-fuchsia-500 to-pink-500',
-      shadow: 'shadow-fuchsia-500/5',
-      filterKey: 'store-month',
-    },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {cards.map((card, index) => {
         const Icon = card.icon;
         return (
@@ -107,3 +97,4 @@ export default function DashboardMetrics({ metrics, onCardClick }: MetricsProps)
     </div>
   );
 }
+

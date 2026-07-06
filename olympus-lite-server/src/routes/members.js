@@ -55,8 +55,10 @@ router.get('/', auth, async (req, res, next) => {
     // Attach active plan info to each member
     const historyRes = await db.query('SELECT * FROM membership_history');
     const plansRes = await db.query('SELECT * FROM membership_plans');
+    const invoicesRes = await db.query('SELECT * FROM invoices');
     const histories = historyRes.rows;
     const plans = plansRes.rows;
+    const invoices = invoicesRes.rows;
 
     const today = new Date();
     today.setHours(0,0,0,0);
@@ -73,12 +75,14 @@ router.get('/', auth, async (req, res, next) => {
 
       // Find latest plan expiry
       let latestExpiry = null;
+      let latestJoining = null;
       let currentPlanName = 'No Plan';
       
       if (mHistory.length > 0) {
         // Sort by expiry_date descending
         mHistory.sort((a, b) => new Date(b.expiry_date) - new Date(a.expiry_date));
         latestExpiry = mHistory[0].expiry_date;
+        latestJoining = mHistory[0].joining_date;
         const plan = plans.find(p => p.id === mHistory[0].plan_id);
         currentPlanName = plan ? plan.plan_name : 'Custom Plan';
       }
@@ -87,11 +91,18 @@ router.get('/', auth, async (req, res, next) => {
       const isActive = activeHist ? true : false;
       const computedStatus = mHistory.length === 0 ? 'Unassigned' : (isActive ? 'Active' : 'Expired');
 
+      // Calculate balance due
+      const mInvoices = invoices.filter(inv => inv.member_id === member.id);
+      const totalBalanceDue = mInvoices.reduce((sum, inv) => sum + parseFloat(inv.balance_due || 0), 0);
+
       return {
         ...member,
         status: computedStatus,
         current_plan: currentPlanName,
-        expiry_date: latestExpiry
+        joining_date: latestJoining,
+        expiry_date: latestExpiry,
+        balance_due: totalBalanceDue,
+        has_pending_payment: totalBalanceDue > 0
       };
     });
 

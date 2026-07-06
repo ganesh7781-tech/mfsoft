@@ -159,23 +159,23 @@ export default function Plans() {
           <span>Loading membership configs...</span>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`glass-card p-6 border flex flex-col justify-between h-56 relative ${
-                plan.is_active ? 'border-slate-200 dark:border-slate-800' : 'opacity-60 border-slate-100'
+              className={`glass-card p-4 border flex flex-col justify-between h-40 relative ${
+                plan.is_active ? 'border-slate-200 dark:border-slate-800' : 'opacity-60 border-slate-150'
               }`}
             >
               {/* Card Header */}
-              <div className="flex items-start justify-between mb-4">
+              <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-base font-extrabold text-slate-900 dark:text-white uppercase tracking-tight">{plan.plan_name}</h3>
-                  <p className="text-xs text-slate-500 mt-1 font-semibold">{plan.duration_days} Days Validity</p>
+                  <h3 className="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-tight line-clamp-1">{plan.plan_name}</h3>
+                  <p className="text-[10px] text-slate-500 mt-0.5 font-semibold">{plan.duration_days} Days Validity</p>
                 </div>
-                <span className={`px-2.5 py-0.5 text-[9px] font-bold rounded-full uppercase ${
+                <span className={`px-2 py-0.5 text-[8px] font-bold rounded-full uppercase tracking-wider ${
                   plan.is_active 
-                    ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400' 
+                    ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-450 border border-emerald-100 dark:border-emerald-900/30' 
                     : 'bg-slate-100 text-slate-500'
                 }`}>
                   {plan.is_active ? 'Active' : 'Disabled'}
@@ -183,16 +183,16 @@ export default function Plans() {
               </div>
 
               {/* Price Details */}
-              <div className="mb-6 flex items-baseline">
-                <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">₹{parseFloat(plan.plan_price.toString()).toLocaleString('en-IN')}</span>
-                <span className="text-xs text-slate-450 dark:text-slate-500 ml-1 font-medium">/ term</span>
+              <div className="my-2 flex items-baseline">
+                <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">₹{parseFloat(plan.plan_price.toString()).toLocaleString('en-IN')}</span>
+                <span className="text-[10px] text-slate-450 dark:text-slate-500 ml-1 font-medium">/ term</span>
               </div>
 
               {/* Actions footer */}
-              <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 pt-3">
+              <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 pt-2.5">
                 <button
                   onClick={() => openEdit(plan)}
-                  className="text-xs text-slate-500 hover:text-amber-500 dark:text-slate-400 dark:hover:text-amber-400 font-bold transition-colors cursor-pointer flex items-center space-x-1"
+                  className="text-[10px] text-slate-500 hover:text-amber-500 dark:text-slate-400 dark:hover:text-amber-400 font-bold transition-colors cursor-pointer flex items-center space-x-1"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
                   <span>Edit Rate</span>
@@ -200,13 +200,13 @@ export default function Plans() {
 
                 <button
                   onClick={() => handleToggleActive(plan)}
-                  className={`text-xs font-bold transition-colors cursor-pointer ${
+                  className={`text-[10px] font-bold transition-colors cursor-pointer ${
                     plan.is_active 
                       ? 'text-rose-500 hover:text-rose-600' 
                       : 'text-emerald-500 hover:text-emerald-600'
                   }`}
                 >
-                  {plan.is_active ? 'Deactivate' : 'Enable Plan'}
+                  {plan.is_active ? 'Deactivate' : 'Enable'}
                 </button>
               </div>
             </div>

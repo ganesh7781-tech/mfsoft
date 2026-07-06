@@ -22,6 +22,7 @@ interface InvoiceDetail {
   payment_status: string;
   due_date: string | null;
   created_at: string;
+  payment_history?: any;
 }
 
 interface InvoiceItem {
@@ -189,6 +190,48 @@ export default function ReceiptModal({ invoiceId, onClose }: ReceiptModalProps) 
               </tbody>
             </table>
 
+            {/* Payment History (if multiple payments are present) */}
+            {invoice.payment_history && (() => {
+              let historyList = [];
+              try {
+                historyList = typeof invoice.payment_history === 'string'
+                  ? JSON.parse(invoice.payment_history)
+                  : invoice.payment_history;
+              } catch (e) {
+                historyList = [];
+              }
+              if (historyList && historyList.length > 1) {
+                return (
+                  <div className="mb-6 bg-slate-50 dark:bg-slate-900/40 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 text-left print:bg-slate-100">
+                    <p className="text-[10px] text-slate-500 uppercase font-black mb-2 tracking-wider">Payment Transaction Logs:</p>
+                    <table className="w-full text-left text-[10px]">
+                      <thead>
+                        <tr className="border-b border-slate-200 text-slate-400 font-bold">
+                          <th className="pb-1 text-left">Date</th>
+                          <th className="pb-1 text-left">Mode</th>
+                          <th className="pb-1 text-left">Type</th>
+                          <th className="pb-1 text-right">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {historyList.map((hist: any, index: number) => (
+                          <tr key={index} className="border-b border-slate-100/50 text-slate-600 dark:text-slate-400">
+                            <td className="py-1.5 text-left text-[10px]">
+                              {new Date(hist.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            </td>
+                            <td className="py-1.5 text-left text-[10px] font-bold">{hist.method}</td>
+                            <td className="py-1.5 text-left text-[10px]">{hist.note || 'Dues Payment'}</td>
+                            <td className="py-1.5 text-right text-[10px] font-bold text-slate-950 dark:text-white">₹{parseFloat(hist.amount.toString()).toFixed(2)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              }
+              return null;
+            })()}
+
             {/* Totals Breakdown */}
             <div className="flex justify-end mb-6">
               <div className="w-48 text-right space-y-1.5">
@@ -196,10 +239,12 @@ export default function ReceiptModal({ invoiceId, onClose }: ReceiptModalProps) 
                   <span>Subtotal:</span>
                   <span>₹{parseFloat((invoice.total_amount - invoice.tax_amount).toString()).toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-slate-500">
-                  <span>GST ({gym?.tax_percentage || 0}%):</span>
-                  <span>₹{parseFloat(invoice.tax_amount.toString()).toFixed(2)}</span>
-                </div>
+                {invoice.tax_amount > 0 && (
+                  <div className="flex justify-between text-slate-500">
+                    <span>GST ({Math.round((invoice.tax_amount / (invoice.total_amount - invoice.tax_amount)) * 100)}%):</span>
+                    <span>₹{parseFloat(invoice.tax_amount.toString()).toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between border-t border-slate-200 pt-1.5 text-slate-900 dark:text-white font-bold text-sm">
                   <span>Net Total:</span>
                   <span>₹{parseFloat(invoice.total_amount.toString()).toFixed(2)}</span>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, CreditCard, ShoppingBag, Settings, LogOut, Menu, X, Dumbbell } from 'lucide-react';
+import { LayoutDashboard, Users, CreditCard, ShoppingBag, Settings, LogOut, Menu, X, Dumbbell, DollarSign, FileText, MessageSquare } from 'lucide-react';
 import ModeToggle from './ui/ModeToggle';
 import api from '../services/api';
 
@@ -36,6 +36,9 @@ export default function Layout({ children }: LayoutProps) {
     { name: 'Members', path: '/members', icon: Users },
     { name: 'Plans Matrix', path: '/plans', icon: CreditCard },
     { name: 'Store POS', path: '/store', icon: ShoppingBag },
+    { name: 'Expenses', path: '/expenses', icon: DollarSign },
+    { name: 'Invoices', path: '/invoices', icon: FileText },
+    { name: 'Enquiries', path: '/enquiries', icon: MessageSquare },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
@@ -51,7 +54,7 @@ export default function Layout({ children }: LayoutProps) {
               <Dumbbell className="w-5 h-5" />
             </div>
             <span className="font-extrabold text-lg bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 tracking-tight uppercase">
-              Muscle Factory Hub
+              BUILDLABSDIGITAL
             </span>
           </div>
         </div>
@@ -100,7 +103,7 @@ export default function Layout({ children }: LayoutProps) {
                 <div className="p-1.5 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 text-white">
                   <Dumbbell className="w-5 h-5" />
                 </div>
-                <span className="font-extrabold text-base text-slate-900 dark:text-white uppercase tracking-tight">Muscle Factory Hub</span>
+                <span className="font-extrabold text-base text-slate-900 dark:text-white uppercase tracking-tight">BUILDLABSDIGITAL</span>
               </div>
               <button onClick={() => setIsOpen(false)} className="p-1 text-slate-500 dark:text-slate-400">
                 <X className="w-6 h-6" />

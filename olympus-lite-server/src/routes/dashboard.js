@@ -21,6 +21,10 @@ router.get('/summary', auth, async (req, res, next) => {
     const invoicesRes = await db.query('SELECT * FROM invoices');
     const invoices = invoicesRes.rows;
 
+    // Fetch all expenses
+    const expensesRes = await db.query('SELECT * FROM expenses');
+    const expenses = expensesRes.rows;
+
     const todayStr = new Date().toISOString().split('T')[0];
     const today = new Date(todayStr);
     
@@ -48,7 +52,7 @@ router.get('/summary', auth, async (req, res, next) => {
       if (hasActivePlan) {
         activeCount++;
         
-        // Check if expiring in next 7 days
+        // Check if expiring in next 30 days
         // Get the latest expiry date among active plans
         const activeExpiries = memberHistory
           .filter(h => {
@@ -62,7 +66,7 @@ router.get('/summary', auth, async (req, res, next) => {
         const diffTime = maxExpiry - today;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
-        if (diffDays >= 0 && diffDays <= 7) {
+        if (diffDays >= 0 && diffDays <= 30) {
           expiringSoonList.push({
             id: member.id,
             first_name: member.first_name,
@@ -135,6 +139,16 @@ router.get('/summary', auth, async (req, res, next) => {
       }
     });
 
+    // Calculate Monthly Expenses and Net Profit
+    let monthlyExpenses = 0;
+    expenses.forEach(exp => {
+      const expDate = new Date(exp.expense_date);
+      if (expDate.getFullYear() === currentYear && expDate.getMonth() === currentMonth) {
+        monthlyExpenses += parseFloat(exp.amount) || 0;
+      }
+    });
+    const netProfitMonth = monthlyRevenue - monthlyExpenses;
+
     // Provide 7 days of daily revenue history for charts
     const salesChartData = [];
     for (let i = 6; i >= 0; i--) {
@@ -169,7 +183,9 @@ router.get('/summary', auth, async (req, res, next) => {
         expired_members: expiredCount,
         today_revenue: todayRevenue,
         monthly_revenue: monthlyRevenue,
-        pending_payments: pendingPayments
+        pending_payments: pendingPayments,
+        total_expenses_month: monthlyExpenses,
+        net_profit_month: netProfitMonth
       },
       expiring_soon: expiringSoonList,
       store_sales_summary: {

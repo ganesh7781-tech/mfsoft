@@ -104,11 +104,35 @@ const ddlSql = `
       total_price NUMERIC(12,2) NOT NULL
   );
 
-  -- 9. INDICES
+  -- 9. EXPENSE REGISTER TABLE
+  CREATE TABLE IF NOT EXISTS expenses (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      amount NUMERIC(12,2) NOT NULL,
+      category VARCHAR(100),
+      expense_date DATE NOT NULL,
+      notes TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- 10. WEBSITE ENQUIRIES TABLE
+  CREATE TABLE IF NOT EXISTS enquiries (
+      id SERIAL PRIMARY KEY,
+      full_name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) NOT NULL,
+      phone VARCHAR(15) NOT NULL,
+      message TEXT,
+      source VARCHAR(100) DEFAULT 'Website',
+      status VARCHAR(50) DEFAULT 'New', -- 'New', 'Contacted', 'Converted', 'Ignored'
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- 10. INDICES
   CREATE INDEX IF NOT EXISTS idx_members_mobile ON members(mobile_number) WHERE is_deleted = FALSE;
   CREATE INDEX IF NOT EXISTS idx_members_status ON members(status);
   CREATE INDEX IF NOT EXISTS idx_history_dates ON membership_history(joining_date, expiry_date);
   CREATE INDEX IF NOT EXISTS idx_invoices_created ON invoices(created_at);
+  CREATE INDEX IF NOT EXISTS idx_expenses_date ON expenses(expense_date);
 `;
 
 async function bootstrap() {

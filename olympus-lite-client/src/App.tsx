@@ -7,6 +7,9 @@ import Members from './pages/Members';
 import Plans from './pages/Plans';
 import StorePOS from './pages/StorePOS';
 import Settings from './pages/Settings';
+import Expenses from './pages/Expenses';
+import Invoices from './pages/Invoices';
+import Enquiries from './pages/Enquiries';
 
 export default function App() {
   return (
@@ -51,6 +54,36 @@ export default function App() {
             <ProtectedRoute>
               <Layout>
                 <StorePOS />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/expenses"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Expenses />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/invoices"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Invoices />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/enquiries"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Enquiries />
               </Layout>
             </ProtectedRoute>
           }

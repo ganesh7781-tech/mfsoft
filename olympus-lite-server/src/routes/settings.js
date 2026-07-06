@@ -121,7 +121,8 @@ router.get('/backup', auth, async (req, res, next) => {
         'products',
         'membership_history',
         'invoices',
-        'invoice_items'
+        'invoice_items',
+        'expenses'
       ];
 
       for (const table of tables) {
@@ -175,7 +176,7 @@ router.post('/restore', auth, upload.single('backup_file'), async (req, res, nex
       await db.query('BEGIN');
       try {
         // Truncate tables in reverse dependency order
-        await db.query('TRUNCATE TABLE invoice_items, invoices, membership_history, products, membership_plans, members, users, gym_profile CASCADE');
+        await db.query('TRUNCATE TABLE invoice_items, invoices, membership_history, products, membership_plans, members, users, gym_profile, expenses CASCADE');
 
         // Repopulate in dependency order
         // 1. Gym Profile
@@ -264,6 +265,17 @@ router.post('/restore', auth, upload.single('backup_file'), async (req, res, nex
           }
         }
 
+        // 9. Expenses
+        if (backupData.expenses && backupData.expenses.length > 0) {
+          for (const row of backupData.expenses) {
+            await db.query(
+              `INSERT INTO expenses (id, title, amount, category, expense_date, notes, created_at)
+               VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+              [row.id, row.title, row.amount, row.category, row.expense_date, row.notes, row.created_at]
+            );
+          }
+        }
+
         // Update SERIAL primary keys sequences
         const sequences = [
           'gym_profile_id_seq',
@@ -273,7 +285,8 @@ router.post('/restore', auth, upload.single('backup_file'), async (req, res, nex
           'products_id_seq',
           'membership_history_id_seq',
           'invoices_id_seq',
-          'invoice_items_id_seq'
+          'invoice_items_id_seq',
+          'expenses_id_seq'
         ];
         
         for (const seq of sequences) {

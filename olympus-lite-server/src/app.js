@@ -21,6 +21,9 @@ const membersRoutes = require('./routes/members');
 const plansRoutes = require('./routes/plans');
 const storeRoutes = require('./routes/store');
 const settingsRoutes = require('./routes/settings');
+const expensesRoutes = require('./routes/expenses');
+const invoicesRoutes = require('./routes/invoices');
+const enquiriesRoutes = require('./routes/enquiries');
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
@@ -28,6 +31,9 @@ app.use('/api/v1/members', membersRoutes);
 app.use('/api/v1/plans', plansRoutes);
 app.use('/api/v1/store', storeRoutes);
 app.use('/api/v1/settings', settingsRoutes);
+app.use('/api/v1/expenses', expensesRoutes);
+app.use('/api/v1/invoices', invoicesRoutes);
+app.use('/api/v1/enquiries', enquiriesRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Save, Download, Upload, ShieldAlert, CheckCircle, RefreshCw, Dumbbell, ShieldCheck, HelpCircle } from 'lucide-react';
+import { Save, Download, Upload, ShieldAlert, CheckCircle, RefreshCw, Dumbbell, ShieldCheck, HelpCircle, FileText } from 'lucide-react';
 import api from '../services/api';
 
 export default function Settings() {
@@ -123,6 +123,64 @@ export default function Settings() {
       });
   };
 
+  const handleExportCSV = async () => {
+    try {
+      const res = await api.get('/members');
+      if (!res.data.success) {
+        throw new Error('Failed to fetch members data');
+      }
+      const membersList = res.data.data;
+
+      // Define CSV Headers
+      const headers = [
+        'Member ID',
+        'Full Name',
+        'Mobile Number',
+        'Email Address',
+        'Residential Address',
+        'Status',
+        'Assigned Plan',
+        'Joining Date',
+        'Expiry (Ending) Date',
+        'Total Balance Due (Pending)'
+      ];
+
+      // Format Rows
+      const csvRows = [headers.join(',')];
+
+      for (const m of membersList) {
+        const row = [
+          m.id,
+          `"${m.first_name || ''} ${m.last_name || ''}"`,
+          `"${m.mobile_number || ''}"`,
+          `"${m.email || ''}"`,
+          `"${(m.address || '').replace(/"/g, '""')}"`,
+          m.status || 'Unassigned',
+          `"${m.current_plan || 'No Plan'}"`,
+          m.joining_date ? new Date(m.joining_date).toLocaleDateString('en-IN') : 'N/A',
+          m.expiry_date ? new Date(m.expiry_date).toLocaleDateString('en-IN') : 'N/A',
+          m.balance_due !== undefined ? m.balance_due : 0
+        ];
+
+        csvRows.push(row.join(','));
+      }
+
+      const csvContent = '\uFEFF' + csvRows.join('\n'); // Add BOM for Excel readability
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `olympus_gym_members_${Date.now()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      setSuccessMsg('Members spreadsheet report downloaded successfully!');
+    } catch (err) {
+      console.error(err);
+      setErrorMsg('Failed to generate spreadsheet export.');
+    }
+  };
+
   const handleRestoreSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
@@ -232,7 +290,7 @@ export default function Settings() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-[10px] font-bold text-slate-455 dark:text-slate-400 uppercase mb-1">Gym Corporate Name *</label>
                     <input
@@ -265,7 +323,7 @@ export default function Settings() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-[10px] font-bold text-slate-455 dark:text-slate-400 uppercase mb-1">Flat Tax percentage (GST %)</label>
                     <input
@@ -313,14 +371,25 @@ export default function Settings() {
             <p className="text-xs text-slate-500 leading-normal mb-6">
               Export the entire state of the application database (members list, plans, invoices ledger, inventory records) into a secure, single backup file.
             </p>
-            <button
-              type="button"
-              onClick={handleExportBackup}
-              className="btn-premium-secondary w-full py-2.5 text-xs border border-slate-200 dark:border-slate-800 flex items-center justify-center space-x-2 cursor-pointer"
-            >
-              <Download className="w-4 h-4 text-amber-500" />
-              <span>Export Database Backup</span>
-            </button>
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={handleExportBackup}
+                className="btn-premium-secondary w-full py-2.5 text-xs border border-slate-200 dark:border-slate-800 flex items-center justify-center space-x-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+              >
+                <Download className="w-4 h-4 text-amber-500" />
+                <span>Export System JSON Backup</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleExportCSV}
+                className="w-full py-2.5 text-xs bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl flex items-center justify-center space-x-2 cursor-pointer transition-all shadow-md shadow-emerald-500/10"
+              >
+                <FileText className="w-4 h-4 text-white" />
+                <span>Download Spreadsheet (Excel/CSV)</span>
+              </button>
+            </div>
           </div>
 
           {/* Restore Box */}

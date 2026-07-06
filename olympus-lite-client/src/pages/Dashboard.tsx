@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, RefreshCw, ArrowUpRight, DollarSign, Dumbbell, ShoppingBag } from 'lucide-react';
+import { Calendar, RefreshCw, ArrowUpRight, DollarSign, Dumbbell, ShoppingBag, Plus, Sparkles, UserCheck, AlertTriangle, X } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 import api from '../services/api';
 import DashboardMetrics from '../components/DashboardMetrics';
@@ -23,6 +23,8 @@ interface Metrics {
   membership_revenue_month: number;
   store_revenue_today: number;
   store_revenue_month: number;
+  total_expenses_month?: number;
+  net_profit_month?: number;
 }
 
 interface StoreSummary {
@@ -45,6 +47,8 @@ export default function Dashboard() {
     membership_revenue_month: 0,
     store_revenue_today: 0,
     store_revenue_month: 0,
+    total_expenses_month: 0,
+    net_profit_month: 0,
   });
   const [expiringMembers, setExpiringMembers] = useState<ExpiringMember[]>([]);
   const [storeSummary, setStoreSummary] = useState<StoreSummary>({ today: 0, month: 0 });
@@ -52,7 +56,74 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [recentStorePurchases, setRecentStorePurchases] = useState<any[]>([]);
   
+  // Check-In Modal state
+  const [isCheckInOpen, setIsCheckInOpen] = useState(false);
+  const [checkInInput, setCheckInInput] = useState('');
+  const [checkInResult, setCheckInResult] = useState<{ success: boolean; message: string } | null>(null);
+
   const navigate = useNavigate();
+
+  const playBeep = (freq: number, duration: number) => {
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      
+      gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+
+      oscillator.start(audioCtx.currentTime);
+      oscillator.stop(audioCtx.currentTime + duration);
+    } catch (e) {
+      console.warn("AudioContext beep failed:", e);
+    }
+  };
+
+  const handleCheckIn = async (mobile: string) => {
+    if (!mobile.trim()) return;
+    try {
+      setCheckInResult(null);
+      const res = await api.get('/members');
+      const allMembers = res.data.data;
+      const searchVal = mobile.trim().toLowerCase();
+      const member = allMembers.find((m: any) => 
+        m.mobile_number === searchVal || 
+        m.first_name.toLowerCase().includes(searchVal) ||
+        m.last_name.toLowerCase().includes(searchVal)
+      );
+
+      if (member) {
+        if (member.status === 'Active') {
+          playBeep(880, 0.15); // A5 High pitch beep (success)
+          setCheckInResult({ 
+            success: true, 
+            message: `ACCESS GRANTED: ${member.first_name} ${member.last_name} (${member.mobile_number}) has an active subscription.` 
+          });
+        } else {
+          playBeep(220, 0.4); // A3 Low pitch beep (error)
+          setCheckInResult({ 
+            success: false, 
+            message: `ACCESS DENIED: ${member.first_name} ${member.last_name} has status: "${member.status.toUpperCase()}". Renewal required.` 
+          });
+        }
+      } else {
+        playBeep(150, 0.5); // Very low frequency buzzer
+        setCheckInResult({ 
+          success: false, 
+          message: `ACCESS DENIED: Member "${mobile}" not found in directory.` 
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      setCheckInResult({ success: false, message: 'API verification request failed.' });
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -74,6 +145,8 @@ export default function Dashboard() {
           membership_revenue_month: res.data.membership_sales_summary?.month || 0,
           store_revenue_today: res.data.store_sales_summary?.today || 0,
           store_revenue_month: res.data.store_sales_summary?.month || 0,
+          total_expenses_month: res.data.metrics.total_expenses_month || 0,
+          net_profit_month: res.data.metrics.net_profit_month || 0,
         });
         setExpiringMembers(res.data.expiring_soon || []);
         setStoreSummary(res.data.store_sales_summary || { today: 0, month: 0 });
@@ -126,10 +199,14 @@ export default function Dashboard() {
   }, []);
 
   const handleMetricCardClick = (filterKey: string) => {
-    if (filterKey === 'active' || filterKey === 'expired' || filterKey === 'all') {
+    if (filterKey === 'active' || filterKey === 'inactive' || filterKey === 'expired' || filterKey === 'all') {
       navigate(`/members?filter=${filterKey}`);
     } else if (filterKey === 'pending') {
       navigate(`/members?filter=pending`);
+    } else if (filterKey === 'expenses') {
+      navigate('/expenses');
+    } else if (filterKey === 'revenue-today' || filterKey === 'revenue-month') {
+      navigate('/members');
     }
   };
 
@@ -153,6 +230,59 @@ export default function Dashboard() {
       {/* Metrics Cards */}
       <DashboardMetrics metrics={metrics} onCardClick={handleMetricCardClick} />
 
+      {/* Quick Actions Panel */}
+      <div className="glass-card p-6">
+        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center space-x-2">
+          <Sparkles className="w-5 h-5 text-amber-500" />
+          <span>Quick Actions Command Center</span>
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <button
+            onClick={() => navigate('/members')}
+            className="flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-900/40 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl transition-all duration-150 cursor-pointer group"
+          >
+            <div className="p-3 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl mb-2.5 group-hover:scale-110 transition-transform">
+              <Plus className="w-5 h-5" />
+            </div>
+            <span className="font-bold text-xs text-slate-800 dark:text-slate-200">Onboard Member</span>
+            <span className="text-[10px] text-slate-500 mt-0.5">New enrollment form</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/store')}
+            className="flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-900/40 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl transition-all duration-150 cursor-pointer group"
+          >
+            <div className="p-3 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl mb-2.5 group-hover:scale-110 transition-transform">
+              <ShoppingBag className="w-5 h-5" />
+            </div>
+            <span className="font-bold text-xs text-slate-800 dark:text-slate-200">POS Shop Checkout</span>
+            <span className="text-[10px] text-slate-500 mt-0.5">Sell retail supplements</span>
+          </button>
+
+          <button
+            onClick={() => { setCheckInInput(''); setCheckInResult(null); setIsCheckInOpen(true); }}
+            className="flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-900/40 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl transition-all duration-150 cursor-pointer group"
+          >
+            <div className="p-3 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl mb-2.5 group-hover:scale-110 transition-transform">
+              <UserCheck className="w-5 h-5" />
+            </div>
+            <span className="font-bold text-xs text-slate-800 dark:text-slate-200">Reception Check-in</span>
+            <span className="text-[10px] text-slate-550 mt-0.5">Check-in member logs</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/expenses')}
+            className="flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-900/40 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl transition-all duration-150 cursor-pointer group"
+          >
+            <div className="p-3 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl mb-2.5 group-hover:scale-110 transition-transform">
+              <DollarSign className="w-5 h-5" />
+            </div>
+            <span className="font-bold text-xs text-slate-800 dark:text-slate-200">Record Expense</span>
+            <span className="text-[10px] text-slate-550 mt-0.5">Log operating cost bills</span>
+          </button>
+        </div>
+      </div>
+
       {/* Dual Column Layout Grid Split */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
@@ -161,7 +291,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center space-x-2">
               <Calendar className="w-5 h-5 text-amber-500" />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">Expiring in 7 Days</h3>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">Expiring in 30 Days</h3>
             </div>
             <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400">
               {expiringMembers.length} Expiring
@@ -172,7 +302,7 @@ export default function Dashboard() {
             {expiringMembers.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-2">
                 <Dumbbell className="w-8 h-8 text-slate-300 dark:text-slate-700" />
-                <p className="text-xs">No active memberships expiring this week!</p>
+                <p className="text-xs">No active memberships expiring this month!</p>
               </div>
             ) : (
               expiringMembers.map((member) => (
@@ -294,6 +424,87 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      {/* RECEPTION CHECK-IN MODAL */}
+      {isCheckInOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-950 w-full max-w-md rounded-2xl shadow-2xl flex flex-col border border-slate-200 dark:border-slate-800">
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-tight">Member Check-in Console</h2>
+              <button
+                onClick={() => setIsCheckInOpen(false)}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 rounded-lg cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-4">
+              <p className="text-xs text-slate-550 leading-normal">
+                Enter the member's exact mobile number or name to log check-in and verify their plan validity.
+              </p>
+              
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  value={checkInInput}
+                  onChange={(e) => setCheckInInput(e.target.value)}
+                  placeholder="e.g. 9876543210 or Aman"
+                  className="input-premium py-2.5 text-xs flex-1"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleCheckIn(checkInInput);
+                    }
+                  }}
+                />
+                <button
+                  onClick={() => handleCheckIn(checkInInput)}
+                  className="py-2.5 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs cursor-pointer"
+                >
+                  Verify check-in
+                </button>
+              </div>
+
+              {/* Status Display Area */}
+              {checkInResult && (
+                <div className={`p-4 rounded-xl border flex items-start space-x-3 transition-all duration-300 ${
+                  checkInResult.success 
+                    ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-600 dark:text-emerald-400' 
+                    : 'bg-rose-500/10 border-rose-500/25 text-rose-600 dark:text-rose-455'
+                }`}>
+                  {checkInResult.success ? (
+                    <UserCheck className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  ) : (
+                    <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  )}
+                  <div>
+                    <h4 className="text-xs font-black uppercase tracking-wide">
+                      {checkInResult.success ? 'Access Verified' : 'Check-in Warning'}
+                    </h4>
+                    <p className="text-xs font-medium leading-normal mt-1">{checkInResult.message}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end bg-slate-50 dark:bg-slate-900/20">
+              <button
+                type="button"
+                onClick={() => setIsCheckInOpen(false)}
+                className="btn-premium-secondary text-xs py-2 px-4 border border-slate-200 dark:border-slate-800 cursor-pointer"
+              >
+                Close Console
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

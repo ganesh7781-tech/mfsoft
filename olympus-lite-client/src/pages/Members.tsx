@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, Plus, ShieldAlert, RefreshCw, X, Camera, Image, CreditCard, Upload } from 'lucide-react';
+import { Search, Plus, ShieldAlert, RefreshCw, X, Camera, Image, CreditCard, Upload, Download } from 'lucide-react';
 import api from '../services/api';
 import MemberRow from '../components/MemberRow';
 import ReceiptModal from '../components/ReceiptModal';
@@ -98,7 +98,25 @@ export default function Members() {
     if (qParam) {
       setSearchQuery(qParam);
     }
-  }, [searchParams]);
+
+    // Check if redirecting to onboard an enquiry
+    const onboardParam = searchParams.get('onboard');
+    if (onboardParam === 'true') {
+      const fn = searchParams.get('first_name') || '';
+      const ln = searchParams.get('last_name') || '';
+      const phone = searchParams.get('phone') || '';
+      const email = searchParams.get('email') || '';
+      setFormData(prev => ({
+        ...prev,
+        first_name: fn,
+        last_name: ln,
+        mobile_number: phone,
+        email: email
+      }));
+      setIsAddModalOpen(true);
+      navigate('/members', { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   // Handle webcam capture initialization
   const startWebcam = async () => {
@@ -348,22 +366,73 @@ export default function Members() {
     if (!matchesSearch) return false;
 
     if (filter === 'active') return member.status === 'Active';
+    if (filter === 'inactive') return member.status !== 'Active';
     if (filter === 'expired') return member.status === 'Expired';
     if (filter === 'unassigned') return member.status === 'Unassigned';
     
     if (filter === 'pending') {
-      // Pending dues means they have outstanding invoices
-      // The member object contains invoices under their profile
-      // In dashboard we checked balance_due > 0.
-      // We can query that by matching status, or checking if member has balance.
-      // For this screen, let's filter if member.expiry_date is expired or status is Expired,
-      // or we can compute pending payments list.
-      // Let's filter by members whose status is Expired or status is Unassigned.
-      return member.status === 'Expired';
+      return member.has_pending_payment === true || (Number(member.balance_due) > 0);
     }
 
     return true;
   });
+
+  const handleExportCSV = () => {
+    if (filteredMembers.length === 0) {
+      alert("No members to export!");
+      return;
+    }
+
+    // Define the headers
+    const headers = [
+      "ID",
+      "First Name",
+      "Last Name",
+      "Mobile Number",
+      "Email",
+      "Date of Birth",
+      "Address",
+      "Height (cm)",
+      "Weight (kg)",
+      "Fitness Goal",
+      "Medical Notes",
+      "Status",
+      "Joined Date"
+    ];
+
+    // Map the members data to rows
+    const rows = filteredMembers.map(m => [
+      m.id,
+      m.first_name || '',
+      m.last_name || '',
+      m.mobile_number || '',
+      m.email || '',
+      m.date_of_birth ? m.date_of_birth.split('T')[0] : '',
+      m.address || '',
+      m.height_cm || '',
+      m.weight_kg || '',
+      m.fitness_goal || '',
+      m.medical_notes || '',
+      m.status || '',
+      m.created_at ? m.created_at.split('T')[0] : ''
+    ]);
+
+    // Create CSV content (escaping double quotes for safety)
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(","))
+    ].join("\n");
+
+    // Download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `gym_members_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="space-y-6">
@@ -374,13 +443,22 @@ export default function Members() {
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white uppercase">Member Directory</h1>
           <p className="text-sm text-slate-500">Manage member enrollments, health logs, and plan assignments</p>
         </div>
-        <button
-          onClick={() => { resetForm(); setIsAddModalOpen(true); }}
-          className="btn-premium-primary flex items-center space-x-2 text-sm"
-        >
-          <Plus className="w-5 h-5" />
-          <span>New Member Onboarding</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={handleExportCSV}
+            className="btn-premium-secondary flex items-center space-x-2 text-sm border border-slate-200 dark:border-slate-800"
+          >
+            <Download className="w-5 h-5 text-amber-500" />
+            <span>Export to CSV</span>
+          </button>
+          <button
+            onClick={() => { resetForm(); setIsAddModalOpen(true); }}
+            className="btn-premium-primary flex items-center space-x-2 text-sm"
+          >
+            <Plus className="w-5 h-5" />
+            <span>New Member Onboarding</span>
+          </button>
+        </div>
       </div>
 
       {/* Instant Filter Box search & status filters */}
@@ -400,7 +478,7 @@ export default function Members() {
 
         {/* Status badges bar */}
         <div className="flex flex-wrap gap-2 w-full md:w-auto">
-          {['all', 'active', 'expired', 'unassigned'].map((f) => (
+          {['all', 'active', 'inactive', 'pending', 'expired', 'unassigned'].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
@@ -420,12 +498,12 @@ export default function Members() {
       <div className="glass-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-150 dark:divide-slate-800/80">
-            <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-450 text-[10px] font-semibold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-450 text-[10px] font-bold uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4 text-left">Member Name</th>
                 <th className="px-6 py-4 text-left">Mobile & Email</th>
                 <th className="px-6 py-4 text-left">Primary Plan</th>
-                <th className="px-6 py-4 text-left">Status</th>
+                <th className="px-6 py-4 text-center">Status</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -467,14 +545,19 @@ export default function Members() {
       {/* ONBOARDING MODAL SLIDE-OVER */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-end">
-          <div className="bg-white dark:bg-slate-950 w-full max-w-2xl h-full shadow-2xl flex flex-col relative border-l border-slate-200 dark:border-slate-800">
+          <div className="bg-white dark:bg-slate-950 w-full max-w-2xl h-full shadow-2xl flex flex-col relative border-l border-slate-200 dark:border-slate-800 transition-all duration-300">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-tight">Onboard New Member</h2>
+            <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center space-x-2">
+                <span className="p-1.5 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                  <Plus className="w-5 h-5 animate-pulse" />
+                </span>
+                <h2 className="text-base font-extrabold text-slate-900 dark:text-white uppercase tracking-tight">Onboard New Member</h2>
+              </div>
               <button
                 onClick={() => { setIsAddModalOpen(false); resetForm(); }}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 rounded-lg cursor-pointer"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 rounded-lg cursor-pointer transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -491,29 +574,29 @@ export default function Members() {
               )}
 
               {/* Photo Upload & Webcam Section */}
-              <div>
-                <span className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Member Photograph</span>
-                <div className="flex items-center space-x-4">
-                  <div className="w-24 h-24 rounded-2xl bg-slate-100 dark:bg-slate-900 border-2 border-dashed border-slate-350 dark:border-slate-850 flex items-center justify-center overflow-hidden relative">
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/20 rounded-2xl border border-slate-150 dark:border-slate-800">
+                <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Member Photograph</span>
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                  <div className="w-24 h-24 rounded-2xl bg-white dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center overflow-hidden relative flex-shrink-0 shadow-inner">
                     {capturedPhoto ? (
                       <img src={capturedPhoto} alt="Captured Profile" className="w-full h-full object-cover" />
                     ) : (
                       <Image className="w-8 h-8 text-slate-400" />
                     )}
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex flex-wrap gap-2">
+                  <div className="space-y-2 flex-1 w-full text-center sm:text-left">
+                    <div className="flex flex-wrap justify-center sm:justify-start gap-2">
                       <button
                         type="button"
                         onClick={useWebcam ? stopWebcam : startWebcam}
-                        className="btn-premium-secondary py-1.5 px-3 flex items-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer"
+                        className="btn-premium-secondary py-2 px-3.5 flex items-center justify-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer"
                       >
-                        <Camera className="w-3.5 h-3.5" />
-                        <span>{useWebcam ? 'Turn Off WebCam' : 'Live webcam capture'}</span>
+                        <Camera className="w-4 h-4 text-amber-500" />
+                        <span>{useWebcam ? 'Turn Off WebCam' : 'Capture Live Photo'}</span>
                       </button>
 
-                      <label className="btn-premium-secondary py-1.5 px-3 flex items-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer">
-                        <Upload className="w-3.5 h-3.5" />
+                      <label className="btn-premium-secondary py-2 px-3.5 flex items-center justify-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer">
+                        <Upload className="w-4 h-4 text-amber-500" />
                         <span>Upload photo file</span>
                         <input
                           type="file"
@@ -523,18 +606,18 @@ export default function Members() {
                         />
                       </label>
                     </div>
-                    <p className="text-[10px] text-slate-500 leading-tight">Capture via system webcam or upload an image file from your device</p>
+                    <p className="text-[10px] text-slate-500 leading-tight">Capture photo via webcam or upload an image file from your computer</p>
                   </div>
                 </div>
 
                 {/* Webcam Live Feed */}
                 {useWebcam && (
-                  <div className="mt-4 p-4 bg-slate-950 rounded-2xl flex flex-col items-center">
-                    <video ref={videoRef} autoPlay playsInline className="w-64 h-64 object-cover rounded-xl border border-slate-850 mb-3" />
+                  <div className="mt-4 p-4 bg-slate-950 rounded-2xl flex flex-col items-center border border-slate-800">
+                    <video ref={videoRef} autoPlay playsInline className="w-64 h-64 object-cover rounded-xl border border-slate-800 mb-3 shadow-lg" />
                     <button
                       type="button"
                       onClick={capturePhoto}
-                      className="py-2 px-6 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-xs transition-colors duration-150 cursor-pointer"
+                      className="py-2.5 px-6 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold text-xs hover:from-orange-600 hover:to-amber-600 transition-all cursor-pointer shadow-md"
                     >
                       Capture Frame
                     </button>
@@ -545,88 +628,93 @@ export default function Members() {
 
               {/* Personal Details */}
               <div className="space-y-4">
-                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-1">Personal Identity</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800/80 pb-1.5 flex items-center">
+                  <span className="w-1.5 h-3 bg-amber-500 rounded-sm mr-2"></span>
+                  Personal Identity
+                </h3>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">First Name *</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">First Name *</label>
                     <input
                       type="text"
                       required
                       value={formData.first_name}
                       onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
                       placeholder="e.g. Aman"
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Last Name *</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Last Name *</label>
                     <input
                       type="text"
                       required
                       value={formData.last_name}
                       onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
                       placeholder="e.g. Sharma"
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Mobile Number (10 Digits) *</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Mobile Number (10 Digits) *</label>
                     <input
                       type="tel"
                       required
                       value={formData.mobile_number}
                       onChange={(e) => setFormData({ ...formData, mobile_number: e.target.value })}
                       placeholder="e.g. 9876543210"
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Date of Birth</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Date of Birth</label>
                     <input
                       type="date"
                       value={formData.date_of_birth}
                       onChange={(e) => setFormData({ ...formData, date_of_birth: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2">
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Email Address</label>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Email Address</label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="e.g. name@domain.com"
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs"
                     />
                   </div>
-                  <div className="col-span-2">
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Residential Address</label>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Residential Address</label>
                     <textarea
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      placeholder="Local street, city"
+                      placeholder="Local street, city, state"
                       rows={2}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Membership Plan & Payment configuration - Prominently Displayed! */}
-              <div className="space-y-4 bg-slate-50 dark:bg-slate-900/30 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
-                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest pb-1 flex items-center space-x-1">
+              {/* Membership Plan & Payment configuration */}
+              <div className="space-y-4 bg-slate-50 dark:bg-slate-900/30 p-5 rounded-2xl border border-slate-150 dark:border-slate-800">
+                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest pb-1.5 flex items-center space-x-1.5 border-b border-slate-150 dark:border-slate-800 pb-2 mb-2">
                   <CreditCard className="w-4 h-4 text-amber-500" />
                   <span>Assign Membership & Payment Details</span>
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Select Tier Plan</label>
+                    <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1.5">Select Tier Plan</label>
                     <select
                       value={formData.plan_id}
                       onChange={(e) => {
@@ -637,7 +725,7 @@ export default function Members() {
                           amount_paid: plan ? plan.plan_price.toString() : ''
                         });
                       }}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold bg-white dark:bg-slate-950"
                     >
                       <option value="">No Plan Assigned (Unassigned status)</option>
                       {plans.map(p => (
@@ -648,38 +736,46 @@ export default function Members() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Joining Date</label>
+                    <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1.5">Joining Date</label>
                     <input
                       type="date"
                       value={formData.joining_date}
                       onChange={(e) => setFormData({ ...formData, joining_date: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold bg-white dark:bg-slate-950"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Amount Paid (₹)</label>
+                    <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1.5">Amount Paid (₹)</label>
                     <input
                       type="number"
                       value={formData.amount_paid}
                       onChange={(e) => setFormData({ ...formData, amount_paid: e.target.value })}
                       placeholder="1500.00"
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-bold bg-white dark:bg-slate-950"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Payment Method</label>
-                    <select
-                      value={formData.payment_method}
-                      onChange={(e) => setFormData({ ...formData, payment_method: e.target.value })}
-                      className="input-premium py-2 text-xs"
-                    >
-                      <option>Cash</option>
-                      <option>UPI</option>
-                      <option>Card</option>
-                    </select>
+                    <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1.5">Payment Method</label>
+                    {/* Visual Segmented Buttons instead of boring dropdown */}
+                    <div className="grid grid-cols-3 gap-2">
+                      {['Cash', 'UPI', 'Card'].map(m => (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, payment_method: m })}
+                          className={`py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer border ${
+                            formData.payment_method === m
+                              ? 'bg-amber-500 text-white border-amber-600 shadow-md shadow-amber-500/10'
+                              : 'bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800/80 text-slate-600 dark:text-slate-400'
+                          }`}
+                        >
+                          {m}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -691,14 +787,14 @@ export default function Members() {
               <button
                 type="button"
                 onClick={() => { setIsAddModalOpen(false); resetForm(); }}
-                className="btn-premium-secondary text-xs py-2 px-4 border border-slate-200 dark:border-slate-800 cursor-pointer"
+                className="btn-premium-secondary text-xs py-2.5 px-5 border border-slate-200 dark:border-slate-800 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleOnboardSubmit}
-                className="btn-premium-primary text-xs py-2 px-6"
+                className="btn-premium-primary text-xs py-2.5 px-7"
               >
                 Onboard Profile
               </button>
@@ -706,35 +802,42 @@ export default function Members() {
 
           </div>
         </div>
-      )}
-
-      {/* EDIT MODAL SLIDE-OVER */}
+      )}        {/* EDIT MODAL SLIDE-OVER */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-end">
-          <div className="bg-white dark:bg-slate-950 w-full max-w-2xl h-full shadow-2xl flex flex-col relative border-l border-slate-200 dark:border-slate-800">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-tight">Edit Member Profile</h2>
+          <div className="bg-white dark:bg-slate-950 w-full max-w-2xl h-full shadow-2xl flex flex-col relative border-l border-slate-200 dark:border-slate-800 transition-all duration-300">
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center space-x-2">
+                <span className="p-1.5 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 animate-pulse">
+                  <Camera className="w-5 h-5" />
+                </span>
+                <h2 className="text-base font-extrabold text-slate-900 dark:text-white uppercase tracking-tight">Edit Member Profile</h2>
+              </div>
               <button
                 onClick={() => { setIsEditModalOpen(false); resetForm(); }}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 rounded-lg cursor-pointer"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 rounded-lg cursor-pointer transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
+            {/* Modal Body / Form */}
             <form onSubmit={handleEditSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
+              
               {formError && (
-                <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-xl flex items-center space-x-2 text-xs">
+                <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-xl flex items-center space-x-2 text-xs font-bold">
                   <ShieldAlert className="w-4 h-4 flex-shrink-0" />
                   <span>{formError}</span>
                 </div>
               )}
 
               {/* Photo section */}
-              <div>
-                <span className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Member Photograph</span>
-                <div className="flex items-center space-x-4">
-                  <div className="w-24 h-24 rounded-2xl bg-slate-100 dark:bg-slate-900 border-2 border-dashed border-slate-350 dark:border-slate-850 flex items-center justify-center overflow-hidden">
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/20 rounded-2xl border border-slate-150 dark:border-slate-800">
+                <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Member Photograph</span>
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                  <div className="w-24 h-24 rounded-2xl bg-white dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner relative">
                     {capturedPhoto ? (
                       <img
                         src={capturedPhoto.startsWith('data') || capturedPhoto.startsWith('http') ? capturedPhoto : `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${capturedPhoto}`}
@@ -745,36 +848,39 @@ export default function Members() {
                       <Image className="w-8 h-8 text-slate-400" />
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={useWebcam ? stopWebcam : startWebcam}
-                      className="btn-premium-secondary py-1.5 px-3 flex items-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer"
-                    >
-                      <Camera className="w-3.5 h-3.5" />
-                      <span>{useWebcam ? 'Turn Off WebCam' : 'Live webcam capture'}</span>
-                    </button>
+                  <div className="space-y-2 flex-1 w-full text-center sm:text-left">
+                    <div className="flex flex-wrap justify-center sm:justify-start gap-2">
+                      <button
+                        type="button"
+                        onClick={useWebcam ? stopWebcam : startWebcam}
+                        className="btn-premium-secondary py-2 px-3.5 flex items-center justify-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer"
+                      >
+                        <Camera className="w-4 h-4 text-amber-500" />
+                        <span>{useWebcam ? 'Turn Off WebCam' : 'Capture Live Photo'}</span>
+                      </button>
 
-                    <label className="btn-premium-secondary py-1.5 px-3 flex items-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer">
-                      <Upload className="w-3.5 h-3.5" />
-                      <span>Upload photo file</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        className="hidden"
-                      />
-                    </label>
+                      <label className="btn-premium-secondary py-2 px-3.5 flex items-center justify-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer">
+                        <Upload className="w-4 h-4 text-amber-500" />
+                        <span>Upload photo file</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                    <p className="text-[10px] text-slate-550 leading-tight">Capture photo via webcam or upload an image file from your computer</p>
                   </div>
                 </div>
 
                 {useWebcam && (
-                  <div className="mt-4 p-4 bg-slate-950 rounded-2xl flex flex-col items-center">
-                    <video ref={videoRef} autoPlay playsInline className="w-64 h-64 object-cover rounded-xl border border-slate-855 mb-3" />
+                  <div className="mt-4 p-4 bg-slate-950 rounded-2xl flex flex-col items-center border border-slate-800">
+                    <video ref={videoRef} autoPlay playsInline className="w-64 h-64 object-cover rounded-xl border border-slate-800 mb-3 shadow-lg" />
                     <button
                       type="button"
                       onClick={capturePhoto}
-                      className="py-2 px-6 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-xs cursor-pointer"
+                      className="py-2.5 px-6 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold text-xs hover:from-orange-600 hover:to-amber-600 transition-all cursor-pointer shadow-md"
                     >
                       Capture Frame
                     </button>
@@ -785,69 +891,73 @@ export default function Members() {
 
               {/* Personal Details */}
               <div className="space-y-4">
-                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-1">Personal Identity</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800/80 pb-1.5 flex items-center">
+                  <span className="w-1.5 h-3 bg-amber-500 rounded-sm mr-2"></span>
+                  Personal Identity
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">First Name *</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">First Name *</label>
                     <input
                       type="text"
                       required
                       value={formData.first_name}
                       onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Last Name *</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Last Name *</label>
                     <input
                       type="text"
                       required
                       value={formData.last_name}
                       onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Mobile Number *</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Mobile Number *</label>
                     <input
                       type="tel"
                       required
                       value={formData.mobile_number}
                       onChange={(e) => setFormData({ ...formData, mobile_number: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-bold"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Date of Birth</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Date of Birth</label>
                     <input
                       type="date"
                       value={formData.date_of_birth}
                       onChange={(e) => setFormData({ ...formData, date_of_birth: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2">
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Email</label>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Email Address</label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold"
                     />
                   </div>
-                  <div className="col-span-2">
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Address</label>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Residential Address</label>
                     <textarea
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                       rows={2}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-medium"
                     />
                   </div>
                 </div>
@@ -855,37 +965,41 @@ export default function Members() {
 
               {/* Health Logs */}
               <div className="space-y-4">
-                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-1">Health Mapping</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800/80 pb-1.5 flex items-center">
+                  <span className="w-1.5 h-3 bg-amber-500 rounded-sm mr-2"></span>
+                  Health Mapping
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Height (cm)</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Height (cm)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={formData.height_cm}
                       onChange={(e) => setFormData({ ...formData, height_cm: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Weight (kg)</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Weight (kg)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={formData.weight_kg}
                       onChange={(e) => setFormData({ ...formData, weight_kg: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Goal</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Fitness Goal</label>
                     <select
                       value={formData.fitness_goal}
                       onChange={(e) => setFormData({ ...formData, fitness_goal: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-bold bg-white dark:bg-slate-950"
                     >
                       <option>Weight Loss</option>
                       <option>Muscle Gain</option>
@@ -893,13 +1007,14 @@ export default function Members() {
                       <option>General Fitness</option>
                     </select>
                   </div>
-                  <div className="col-span-2">
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Medical Notes</label>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Medical Notes / Conditions</label>
                     <input
                       type="text"
                       value={formData.medical_notes}
                       onChange={(e) => setFormData({ ...formData, medical_notes: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      placeholder="e.g. Hypertension, Asthma"
+                      className="input-premium py-2.5 text-xs font-semibold"
                     />
                   </div>
                 </div>
@@ -907,33 +1022,37 @@ export default function Members() {
 
               {/* Emergency Contact */}
               <div className="space-y-4">
-                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-1">Emergency Contact</h3>
-                <div className="grid grid-cols-3 gap-4">
+                <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800/80 pb-1.5 flex items-center">
+                  <span className="w-1.5 h-3 bg-amber-500 rounded-sm mr-2"></span>
+                  Emergency Contact Details
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Name</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Contact Name</label>
                     <input
                       type="text"
                       value={formData.emergency_name}
                       onChange={(e) => setFormData({ ...formData, emergency_name: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Relation</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Relation</label>
                     <input
                       type="text"
                       value={formData.emergency_relation}
                       onChange={(e) => setFormData({ ...formData, emergency_relation: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-semibold"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1">Phone</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase mb-1.5">Phone Number</label>
                     <input
                       type="tel"
                       value={formData.emergency_phone}
                       onChange={(e) => setFormData({ ...formData, emergency_phone: e.target.value })}
-                      className="input-premium py-2 text-xs"
+                      className="input-premium py-2.5 text-xs font-bold"
                     />
                   </div>
                 </div>
@@ -941,18 +1060,19 @@ export default function Members() {
 
             </form>
 
+            {/* Modal Footer */}
             <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end space-x-3 bg-slate-50 dark:bg-slate-900/20">
               <button
                 type="button"
                 onClick={() => { setIsEditModalOpen(false); resetForm(); }}
-                className="btn-premium-secondary text-xs py-2 px-4 border border-slate-200 dark:border-slate-800 cursor-pointer"
+                className="btn-premium-secondary text-xs py-2.5 px-5 border border-slate-200 dark:border-slate-800 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleEditSubmit}
-                className="btn-premium-primary text-xs py-2 px-6"
+                className="btn-premium-primary text-xs py-2.5 px-7"
               >
                 Save Profile
               </button>
