@@ -10,7 +10,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [gymName, setGymName] = useState('Olympus Gym');
+  const [gymName, setGymName] = useState('Muscle Factory Hub');
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -50,11 +50,11 @@ export default function Layout({ children }: LayoutProps) {
         {/* Sidebar Header Logo */}
         <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800/80">
           <div className="flex items-center space-x-2.5">
-            <div className="p-1.5 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-md">
+            <div className="p-1.5 rounded-lg bg-gradient-to-br from-red-600 to-red-500 text-white shadow-md">
               <Dumbbell className="w-5 h-5" />
             </div>
-            <span className="font-extrabold text-lg bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 tracking-tight uppercase">
-              BUILDLABSDIGITAL
+            <span className="font-extrabold text-lg bg-clip-text text-transparent bg-gradient-to-r from-red-650 via-rose-500 to-red-500 tracking-tight uppercase">
+              Muscle Factory Hub
             </span>
           </div>
         </div>
@@ -70,11 +70,11 @@ export default function Layout({ children }: LayoutProps) {
                 to={item.path}
                 className={`flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-150 ${
                   isActive
-                    ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-l-4 border-amber-500'
+                    ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-l-4 border-red-500'
                     : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-950 dark:hover:text-slate-200'
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-amber-500' : 'text-slate-400 dark:text-slate-500'}`} />
+                <Icon className={`w-5 h-5 ${isActive ? 'text-red-500' : 'text-slate-400 dark:text-slate-500'}`} />
                 <span>{item.name}</span>
               </Link>
             );
@@ -100,10 +100,10 @@ export default function Layout({ children }: LayoutProps) {
           <div className="relative flex flex-col w-64 bg-white dark:bg-slate-900 h-full shadow-xl z-50">
             <div className="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/80">
               <div className="flex items-center space-x-2.5">
-                <div className="p-1.5 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 text-white">
+                <div className="p-1.5 rounded-lg bg-gradient-to-br from-red-600 to-red-500 text-white">
                   <Dumbbell className="w-5 h-5" />
                 </div>
-                <span className="font-extrabold text-base text-slate-900 dark:text-white uppercase tracking-tight">BUILDLABSDIGITAL</span>
+                <span className="font-extrabold text-base text-slate-900 dark:text-white uppercase tracking-tight">Muscle Factory Hub</span>
               </div>
               <button onClick={() => setIsOpen(false)} className="p-1 text-slate-500 dark:text-slate-400">
                 <X className="w-6 h-6" />
@@ -121,7 +121,7 @@ export default function Layout({ children }: LayoutProps) {
                     onClick={() => setIsOpen(false)}
                     className={`flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-150 ${
                       isActive
-                        ? 'bg-amber-500/10 text-amber-500'
+                        ? 'bg-red-500/10 text-red-500'
                         : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
@@ -172,9 +172,70 @@ export default function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 overflow-y-auto pb-24 lg:pb-6">
           {children}
         </main>
+      </div>
+
+      {/* Mobile Bottom Navbar */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 lg:hidden print:hidden shadow-lg shadow-slate-950/10">
+        <div className="flex justify-around items-center h-16">
+          <Link
+            to="/"
+            className={`flex flex-col items-center justify-center w-full h-full text-[10px] font-bold transition-colors ${
+              location.pathname === '/'
+                ? 'text-red-500'
+                : 'text-slate-550 dark:text-slate-400 hover:text-slate-850 dark:hover:text-slate-200'
+            }`}
+          >
+            <LayoutDashboard className="w-5 h-5 mb-0.5" />
+            <span>Dashboard</span>
+          </Link>
+          <Link
+            to="/members"
+            className={`flex flex-col items-center justify-center w-full h-full text-[10px] font-bold transition-colors ${
+              location.pathname === '/members'
+                ? 'text-red-500'
+                : 'text-slate-550 dark:text-slate-400 hover:text-slate-850 dark:hover:text-slate-200'
+            }`}
+          >
+            <Users className="w-5 h-5 mb-0.5" />
+            <span>Members</span>
+          </Link>
+          <Link
+            to="/store"
+            className={`flex flex-col items-center justify-center w-full h-full text-[10px] font-bold transition-colors ${
+              location.pathname === '/store'
+                ? 'text-red-500'
+                : 'text-slate-550 dark:text-slate-400 hover:text-slate-850 dark:hover:text-slate-200'
+            }`}
+          >
+            <ShoppingBag className="w-5 h-5 mb-0.5" />
+            <span>Store POS</span>
+          </Link>
+          <Link
+            to="/enquiries"
+            className={`flex flex-col items-center justify-center w-full h-full text-[10px] font-bold transition-colors ${
+              location.pathname === '/enquiries'
+                ? 'text-red-500'
+                : 'text-slate-550 dark:text-slate-400 hover:text-slate-850 dark:hover:text-slate-200'
+            }`}
+          >
+            <MessageSquare className="w-5 h-5 mb-0.5" />
+            <span>Enquiries</span>
+          </Link>
+          <button
+            onClick={() => setIsOpen(true)}
+            className={`flex flex-col items-center justify-center w-full h-full text-[10px] font-bold transition-colors cursor-pointer ${
+              isOpen
+                ? 'text-red-500'
+                : 'text-slate-550 dark:text-slate-400 hover:text-slate-850 dark:hover:text-slate-200'
+            }`}
+          >
+            <Menu className="w-5 h-5 mb-0.5" />
+            <span>More</span>
+          </button>
+        </div>
       </div>
 
     </div>

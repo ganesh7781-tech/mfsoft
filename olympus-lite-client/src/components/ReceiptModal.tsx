@@ -129,7 +129,7 @@ export default function ReceiptModal({ invoiceId, onClose }: ReceiptModalProps) 
             <div className="flex items-start justify-between border-b border-slate-200 pb-4 mb-4">
               <div>
                 <h1 className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white uppercase mb-1">
-                  {gym?.gym_name || "Olympus Gym"}
+                  {gym?.gym_name || "Muscle Factory Hub"}
                 </h1>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 max-w-[250px] leading-tight">
                   {gym?.address || "Mount Olympus Base Camp"}
@@ -142,7 +142,7 @@ export default function ReceiptModal({ invoiceId, onClose }: ReceiptModalProps) 
                 {logoPath ? (
                   <img src={logoPath} alt="Gym Logo" className="h-10 w-auto object-contain mb-2 ml-auto" />
                 ) : (
-                  <div className="text-amber-500 font-extrabold text-base tracking-wider mb-2 uppercase">OLYMPUS</div>
+                  <div className="text-amber-500 font-extrabold text-base tracking-wider mb-2 uppercase">Muscle Factory Hub</div>
                 )}
                 <div className="text-[10px] text-slate-500 dark:text-slate-400">
                   Date: {new Date(invoice.created_at).toLocaleString('en-IN')}

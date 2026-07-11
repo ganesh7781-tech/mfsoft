@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Search, Trash2, DollarSign, Calendar, Tag, FileText, X, AlertCircle, TrendingDown, Landmark, Briefcase, Zap, HelpCircle } from 'lucide-react';
+import { Plus, Search, Trash2, DollarSign, Calendar, Tag, FileText, X, AlertCircle, TrendingDown, Landmark, Briefcase, Zap, HelpCircle, RefreshCw } from 'lucide-react';
 import api from '../services/api';
 
 interface Expense {
@@ -234,7 +234,7 @@ export default function Expenses() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by description or transaction reference..."
-            className="input-premium pl-11 py-2.5 text-sm"
+            className="input-premium !pl-11 py-2.5 text-sm"
           />
         </div>
 
@@ -271,11 +271,11 @@ export default function Expenses() {
         </div>
       </div>
 
-      {/* Ledger Table */}
-      <div className="glass-card overflow-hidden border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+            {/* Ledger Table - Desktop */}
+      <div className="glass-card overflow-hidden border border-slate-200/80 dark:border-slate-800/80 shadow-sm hidden md:block">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-850">
-            <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-450 text-[10px] font-bold uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4.5 text-left">Expense Date</th>
                 <th className="px-6 py-4.5 text-left">Description</th>
@@ -344,6 +344,77 @@ export default function Expenses() {
         </div>
       </div>
 
+      {/* Ledger Cards - Mobile */}
+      <div className="md:hidden space-y-4">
+        {loading ? (
+          <div className="glass-card p-8 text-center text-slate-500 dark:text-slate-400">
+            <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-amber-500" />
+            <span>Syncing expense books...</span>
+          </div>
+        ) : filteredExpenses.length === 0 ? (
+          <div className="glass-card p-8 text-center text-slate-500 dark:text-slate-400">
+            No expense vouchers matching current filter guidelines.
+          </div>
+        ) : (
+          filteredExpenses.map((exp) => {
+            const meta = getCategoryStyles(exp.category);
+            const Icon = meta.icon;
+
+            return (
+              <div key={exp.id} className="glass-card p-4 space-y-3 shadow-sm border border-slate-200/80 dark:border-slate-800/80">
+                {/* Header: Title & Amount */}
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-2.5">
+                    <span className={`p-2 rounded-lg ${meta.bg.split(' ')[0]}`}>
+                      <Icon className="w-4 h-4" />
+                    </span>
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-tight">{exp.title}</h4>
+                      <span className="text-[9px] text-slate-550 dark:text-slate-450">
+                        {new Date(exp.expense_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-black text-xs text-rose-500 dark:text-rose-455">
+                      -₹{Number(exp.amount).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Category & notes details */}
+                <div className="bg-slate-50 dark:bg-slate-900/30 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800/50 space-y-1.5 text-[10px]">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-400 uppercase font-bold">Category</span>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wider ${meta.bg}`}>
+                      <span className={`w-1 h-1 mr-1 rounded-full ${meta.dot}`}></span>
+                      {exp.category}
+                    </span>
+                  </div>
+                  {exp.notes && (
+                    <div className="border-t border-slate-100 dark:border-slate-800/50 pt-1.5 mt-1.5">
+                      <span className="text-slate-400 uppercase font-bold block mb-0.5">Notes / Ref</span>
+                      <p className="text-slate-600 dark:text-slate-350 text-[10px] leading-normal">{exp.notes}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-end pt-1">
+                  <button
+                    onClick={() => handleDelete(exp.id, exp.title)}
+                    className="py-1.5 px-3.5 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg transition-all cursor-pointer flex items-center space-x-1.5 text-[10px] font-bold uppercase tracking-wider"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Delete Voucher</span>
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
       {/* RECORD EXPENSE MODAL */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -381,7 +452,7 @@ export default function Expenses() {
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     placeholder="e.g. Gym Building Rent"
-                    className="input-premium pl-9 py-2 text-xs"
+                    className="input-premium !pl-10 py-2 text-xs"
                   />
                 </div>
               </div>
@@ -400,7 +471,7 @@ export default function Expenses() {
                       value={formData.amount}
                       onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                       placeholder="e.g. 15000"
-                      className="input-premium pl-9 py-2 text-xs"
+                      className="input-premium !pl-10 py-2 text-xs"
                     />
                   </div>
                 </div>
@@ -413,7 +484,7 @@ export default function Expenses() {
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="input-premium pl-9 py-2 text-xs"
+                      className="input-premium !pl-10 py-2 text-xs"
                     >
                       {categories.map(c => (
                         <option key={c} value={c}>{c}</option>
@@ -434,7 +505,7 @@ export default function Expenses() {
                     required
                     value={formData.expense_date}
                     onChange={(e) => setFormData({ ...formData, expense_date: e.target.value })}
-                    className="input-premium pl-9 py-2 text-xs"
+                    className="input-premium !pl-10 py-2 text-xs"
                   />
                 </div>
               </div>

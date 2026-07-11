@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, Plus, ShieldAlert, RefreshCw, X, Camera, Image, CreditCard, Upload, Download } from 'lucide-react';
+import { Search, Plus, ShieldAlert, RefreshCw, X, Camera, Image, CreditCard, Upload, Download, ShoppingCart, Edit3, Trash2, FileText } from 'lucide-react';
 import api from '../services/api';
 import MemberRow from '../components/MemberRow';
 import ReceiptModal from '../components/ReceiptModal';
@@ -472,7 +472,7 @@ export default function Members() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Type name or mobile number..."
-            className="input-premium pl-10 py-2.5 text-sm"
+            className="input-premium !pl-10 py-2.5 text-sm"
           />
         </div>
 
@@ -494,11 +494,11 @@ export default function Members() {
         </div>
       </div>
 
-      {/* Directory Table */}
-      <div className="glass-card overflow-hidden">
+      {/* Directory Table - Desktop */}
+      <div className="glass-card overflow-hidden hidden md:block">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-150 dark:divide-slate-800/80">
-            <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-450 text-[10px] font-bold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-550 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4 text-left">Member Name</th>
                 <th className="px-6 py-4 text-left">Mobile & Email</th>
@@ -540,6 +540,175 @@ export default function Members() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Directory Cards - Mobile */}
+      <div className="md:hidden space-y-4">
+        {loading ? (
+          <div className="glass-card p-8 text-center text-slate-500 dark:text-slate-400">
+            <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-amber-500" />
+            <span>Loading gym profile records...</span>
+          </div>
+        ) : filteredMembers.length === 0 ? (
+          <div className="glass-card p-8 text-center text-slate-500 dark:text-slate-400">
+            No members match your criteria. Onboard a new member to begin!
+          </div>
+        ) : (
+          filteredMembers.map((member) => {
+            const isCorruptName = String(member.first_name) === '2';
+            const displayName = isCorruptName 
+              ? 'Walk-in Customer' 
+              : `${member.first_name || ''} ${member.last_name || ''}`;
+            
+            const initials = (() => {
+              const f = member.first_name ? String(member.first_name)[0] || '' : '';
+              const l = member.last_name ? String(member.last_name)[0] || '' : '';
+              return `${f}${l}`.toUpperCase();
+            })();
+            const displayInitials = isCorruptName ? 'WC' : initials;
+
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+            const photoUrl = member.photo_url
+              ? member.photo_url.startsWith('http')
+                ? member.photo_url
+                : `${API_URL.replace('/api/v1', '')}${member.photo_url}`
+              : null;
+
+            const getStatusBadge = (status: string) => {
+              switch (status) {
+                case 'Active':
+                  return (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-450 border border-emerald-250 dark:border-emerald-900/30">
+                      <span className="w-2 h-2 mr-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      Active
+                    </span>
+                  );
+                case 'Expired':
+                  return (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-800 dark:bg-rose-955/30 dark:text-rose-455 border border-rose-250 dark:border-rose-900/30">
+                      <span className="w-2 h-2 mr-1.5 rounded-full bg-rose-500"></span>
+                      Expired
+                    </span>
+                  );
+                default:
+                  return (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 dark:bg-slate-900/50 dark:text-slate-400 border border-slate-200 dark:border-slate-800">
+                      <span className="w-2 h-2 mr-1.5 rounded-full bg-slate-400"></span>
+                      Unassigned
+                    </span>
+                  );
+              }
+            };
+
+            const getAvatarBg = () => {
+              if (photoUrl) return '';
+              switch (member.status) {
+                case 'Active':
+                  return 'bg-emerald-500/10 dark:bg-emerald-955/20 border border-emerald-200/30 dark:border-emerald-900/20';
+                case 'Expired':
+                  return 'bg-rose-500/10 dark:bg-rose-955/20 border border-rose-200/30 dark:border-rose-900/20';
+                default:
+                  return 'bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800';
+              }
+            };
+
+            const getAvatarTextClass = () => {
+              switch (member.status) {
+                case 'Active':
+                  return 'text-emerald-600 dark:text-emerald-400';
+                case 'Expired':
+                  return 'text-rose-600 dark:text-rose-455';
+                default:
+                  return 'text-slate-500 dark:text-slate-400';
+              }
+            };
+
+            return (
+              <div key={member.id} className="glass-card p-4 space-y-3.5 shadow-sm border border-slate-200/80 dark:border-slate-800/80">
+                {/* Header info */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className={`h-10 w-10 rounded-full flex items-center justify-center overflow-hidden font-black text-sm select-none ${getAvatarBg()}`}>
+                      {photoUrl ? (
+                        <img src={photoUrl} alt="Avatar" className="h-full w-full object-cover" />
+                      ) : (
+                        <span className={getAvatarTextClass()}>{displayInitials}</span>
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-900 dark:text-white">{displayName}</h4>
+                      <p className="text-[9px] text-slate-500 dark:text-slate-400 font-medium">Goal: {member.fitness_goal || 'General Fitness'}</p>
+                    </div>
+                  </div>
+                  <div>
+                    {getStatusBadge(member.status)}
+                  </div>
+                </div>
+
+                {/* Details layout */}
+                <div className="grid grid-cols-2 gap-3 py-2.5 border-y border-slate-100 dark:border-slate-800/80 text-[11px]">
+                  <div>
+                    <span className="text-[9px] uppercase font-bold text-slate-400 dark:text-slate-500 block mb-0.5">Contact Details</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-250 block">{member.mobile_number || 'N/A'}</span>
+                    <span className="text-[9px] text-slate-550 dark:text-slate-450 truncate block max-w-[140px]">{member.email || 'No Email'}</span>
+                  </div>
+                  <div>
+                    <span className="text-[9px] uppercase font-bold text-slate-400 dark:text-slate-500 block mb-0.5">Primary Plan</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-250 block truncate max-w-[140px]">{member.current_plan}</span>
+                    <span className="text-[9px] text-rose-500 dark:text-rose-455 font-semibold block">
+                      {member.expiry_date && !isNaN(Date.parse(member.expiry_date))
+                        ? `Expires: ${new Date(member.expiry_date).toLocaleDateString('en-IN')}`
+                        : 'N/A'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action Buttons Grid */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                  <div className="flex flex-1 gap-2">
+                    <button
+                      onClick={() => handleOpenRenew(member)}
+                      className="flex-1 py-2 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-600 hover:text-white dark:text-emerald-400 font-bold text-[9px] uppercase tracking-wide rounded-lg border border-emerald-500/20 hover:border-transparent transition-all cursor-pointer flex items-center justify-center space-x-1"
+                    >
+                      <RefreshCw className="w-3 h-3" />
+                      <span>Renew</span>
+                    </button>
+                    <button
+                      onClick={() => navigate(`/store?member_id=${member.id}`)}
+                      className="flex-1 py-2 bg-amber-500/10 hover:bg-amber-500 text-amber-600 hover:text-white dark:text-amber-400 font-bold text-[9px] uppercase tracking-wide rounded-lg border border-amber-500/20 hover:border-transparent transition-all cursor-pointer flex items-center justify-center space-x-1"
+                    >
+                      <ShoppingCart className="w-3 h-3" />
+                      <span>POS Shop</span>
+                    </button>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handlePrintLastInvoice(member)}
+                      className="p-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-350 rounded-lg transition-all cursor-pointer flex items-center justify-center border border-slate-200 dark:border-slate-800"
+                      title="Print Receipt"
+                    >
+                      <FileText className="w-3.5 h-3.5 text-violet-500" />
+                    </button>
+                    <button
+                      onClick={() => handleOpenEdit(member)}
+                      className="p-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-350 rounded-lg transition-all cursor-pointer flex items-center justify-center border border-slate-200 dark:border-slate-800"
+                      title="Edit Member"
+                    >
+                      <Edit3 className="w-3.5 h-3.5 text-blue-500" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteMember(member)}
+                      className="p-2 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg transition-all cursor-pointer flex items-center justify-center"
+                      title="Delete Member"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* ONBOARDING MODAL SLIDE-OVER */}

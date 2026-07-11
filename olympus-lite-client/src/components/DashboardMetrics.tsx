@@ -58,8 +58,8 @@ export default function DashboardMetrics({ metrics, onCardClick }: MetricsProps)
       title: "Today's Collection",
       value: `₹${todayCollection.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
       icon: DollarSign,
-      color: 'from-orange-500 via-amber-500 to-yellow-500',
-      shadow: 'shadow-orange-500/5',
+      color: 'from-red-600 via-rose-500 to-red-500',
+      shadow: 'shadow-red-500/5',
       filterKey: 'revenue-today',
     },
     {

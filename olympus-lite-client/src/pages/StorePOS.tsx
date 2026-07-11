@@ -234,7 +234,7 @@ export default function StorePOS() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white uppercase flex items-center">
-            <span className="p-2 rounded-xl bg-amber-500/10 text-amber-500 mr-3">
+            <span className="p-2 rounded-xl bg-red-500/10 text-red-500 mr-3">
               <ShoppingCart className="w-6 h-6 animate-bounce" />
             </span>
             <span>Retail Shop POS</span>
@@ -266,7 +266,7 @@ export default function StorePOS() {
                   onClick={() => setCategoryFilter(cat)}
                   className={`px-4.5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer ${
                     isSelected
-                      ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20 border border-amber-550'
+                      ? 'bg-red-500 text-white shadow-md shadow-red-500/20 border border-red-650'
                       : 'bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-slate-600 dark:text-slate-400 hover:bg-slate-50/50'
                   }`}
                 >
@@ -279,7 +279,7 @@ export default function StorePOS() {
           {/* Product Items Grid */}
           {loading ? (
             <div className="text-center py-20 text-slate-550">
-              <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-amber-500" />
+              <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-red-500" />
               <span className="text-sm font-semibold">Syncing product inventory...</span>
             </div>
           ) : filteredProducts.length === 0 ? (
@@ -302,7 +302,7 @@ export default function StorePOS() {
                         ? 'opacity-40 border-red-500/40 bg-red-500/5 cursor-not-allowed'
                         : isLowStock
                         ? 'border-yellow-500/40 hover:border-yellow-500/80 hover:shadow-lg shadow-yellow-500/5'
-                        : 'border-slate-200/80 dark:border-slate-800/80 hover:border-amber-500/50 hover:shadow-xl shadow-slate-500/5'
+                        : 'border-slate-200/80 dark:border-slate-800/80 hover:border-red-500/50 hover:shadow-xl shadow-slate-500/5'
                     }`}
                   >
                     <div>
@@ -334,7 +334,7 @@ export default function StorePOS() {
                         ) : (
                           <span className={`text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider ${
                             isLowStock 
-                              ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400'
+                              ? 'bg-red-100 text-red-750 dark:bg-red-500/15 dark:text-red-400'
                               : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700'
                           }`}>
                             Stock: {prod.stock_qty}
@@ -359,12 +359,12 @@ export default function StorePOS() {
               {/* Member Selection Lookup Box */}
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-2 flex items-center space-x-1.5">
-                  <User className="w-4 h-4 text-amber-500" />
+                  <User className="w-4 h-4 text-red-500" />
                   <span>Billed Member / Walk-in</span>
                 </label>
                 
                 {selectedMember ? (
-                  <div className="p-3 bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-between">
+                  <div className="p-3 bg-red-500/5 dark:bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-between">
                     <div>
                       <p className="text-xs font-black text-slate-900 dark:text-white uppercase">
                         {selectedMember.first_name} {selectedMember.last_name}
@@ -422,7 +422,7 @@ export default function StorePOS() {
               <div className="flex flex-col flex-1">
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-2 flex items-center justify-between">
                   <span className="flex items-center space-x-1.5">
-                    <ShoppingCart className="w-4 h-4 text-amber-500" />
+                    <ShoppingCart className="w-4 h-4 text-red-500" />
                     <span>Cart Items ({cart.length})</span>
                   </span>
                   {cart.length > 0 && (
@@ -494,7 +494,7 @@ export default function StorePOS() {
               {/* Discount selection */}
               <div className="flex items-center justify-between text-xs border-b border-dashed border-slate-150 dark:border-slate-800 pb-3">
                 <span className="text-slate-500 flex items-center space-x-1.5">
-                  <Tag className="w-4 h-4 text-amber-500" />
+                  <Tag className="w-4 h-4 text-red-500" />
                   <span className="font-semibold">Offer Discount:</span>
                 </span>
                 <select
@@ -527,7 +527,7 @@ export default function StorePOS() {
                   <span className="font-semibold">₹{taxAmount.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between font-black text-sm text-slate-900 dark:text-white border-t border-slate-150 dark:border-slate-800 pt-2.5">
-                  <span className="flex items-center text-amber-500">
+                  <span className="flex items-center text-red-500">
                     <Receipt className="w-4 h-4 mr-1" />
                     <span>Net Amount Due:</span>
                   </span>
@@ -555,7 +555,7 @@ export default function StorePOS() {
                           onClick={() => setPaymentMethod(method.name)}
                           className={`py-2 px-1 rounded-xl flex flex-col items-center justify-center border text-[10px] font-black uppercase tracking-wider transition-all duration-150 cursor-pointer ${
                             isSelected
-                              ? 'bg-amber-500 text-white border-amber-600 shadow-md shadow-amber-500/10 scale-102'
+                              ? 'bg-red-500 text-white border-red-600 shadow-md shadow-red-500/10 scale-102'
                               : 'bg-slate-50 dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400'
                           }`}
                         >
@@ -588,7 +588,7 @@ export default function StorePOS() {
                 type="button"
                 onClick={handleCheckoutSubmit}
                 disabled={cart.length === 0}
-                className="w-full py-3.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-xl text-xs shadow-lg hover:shadow-orange-500/25 active:scale-[0.99] transition-all cursor-pointer flex justify-center items-center space-x-2"
+                className="w-full py-3.5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-650 text-white font-bold rounded-xl text-xs shadow-lg hover:shadow-red-500/25 active:scale-[0.99] transition-all cursor-pointer flex justify-center items-center space-x-2"
               >
                 <Sparkles className="w-4.5 h-4.5 animate-pulse" />
                 <span className="uppercase tracking-wider">Checkout & Print Receipt</span>

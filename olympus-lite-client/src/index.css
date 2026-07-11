@@ -7,14 +7,14 @@
 body {
   font-family: 'Outfit', 'Inter', sans-serif;
   @apply antialiased bg-slate-50 text-slate-900 transition-colors duration-300;
-  background-image: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.04) 0px, transparent 50%),
-                    radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.03) 0px, transparent 50%);
+  background-image: radial-gradient(at 0% 0%, rgba(239, 68, 68, 0.04) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.03) 0px, transparent 50%);
 }
 
 body.dark {
   @apply bg-slate-950 text-slate-50;
-  background-image: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.02) 0px, transparent 50%),
-                    radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.015) 0px, transparent 50%);
+  background-image: radial-gradient(at 0% 0%, rgba(239, 68, 68, 0.02) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.015) 0px, transparent 50%);
 }
 
 /* Custom Scrollbar */
@@ -53,12 +53,12 @@ body.dark {
 
 /* Interactive Buttons */
 .btn-premium-primary {
-  @apply px-4 py-2.5 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 text-white font-medium rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer;
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+  @apply px-4 py-2.5 bg-gradient-to-r from-red-600 via-red-500 to-rose-500 text-white font-medium rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
 }
 
 .btn-premium-primary:hover {
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
 }
 
 .btn-premium-secondary {
@@ -67,11 +67,11 @@ body.dark {
 
 /* Form Elements */
 .input-premium {
-  @apply w-full px-4 py-3 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-amber-500 transition-all duration-200 text-slate-900 dark:text-slate-100;
+  @apply w-full px-4 py-3 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-red-500 transition-all duration-200 text-slate-900 dark:text-slate-100;
 }
 
 .input-premium:focus {
-  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
 
 /* Badges */

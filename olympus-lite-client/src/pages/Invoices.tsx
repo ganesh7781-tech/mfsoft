@@ -214,7 +214,7 @@ export default function Invoices() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by ID, member name, mobile, or payment method..."
-            className="input-premium pl-11 py-2.5 text-sm"
+            className="input-premium !pl-11 py-2.5 text-sm"
           />
         </div>
 
@@ -243,10 +243,10 @@ export default function Invoices() {
         </div>
       </div>
 
-      {/* Invoices List Ledger */}
-      <div className="glass-card overflow-hidden border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+      {/* Invoices List Ledger - Desktop */}
+      <div className="glass-card overflow-hidden border border-slate-200/80 dark:border-slate-800/80 shadow-sm hidden md:block">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-850">
+          <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-855">
             <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-550 dark:text-slate-400 text-[10px] font-extrabold uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4.5 text-left">Receipt #</th>
@@ -296,7 +296,7 @@ export default function Invoices() {
                           </div>
                           <div className="ml-3">
                             <div className="text-xs font-bold text-slate-900 dark:text-white">{displayName}</div>
-                            <div className="text-[10px] text-slate-500">{inv.member_mobile}</div>
+                            <div className="text-[10px] text-slate-550">{inv.member_mobile}</div>
                           </div>
                         </div>
                       </td>
@@ -356,7 +356,7 @@ export default function Invoices() {
                               e.stopPropagation();
                               setActiveDropdownId(activeDropdownId === inv.id ? null : inv.id);
                             }}
-                            className="inline-flex items-center px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 cursor-pointer shadow-sm select-none"
+                            className="inline-flex items-center px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-350 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 cursor-pointer shadow-sm select-none"
                           >
                             <span>Actions</span>
                             <ChevronDown className="w-3.5 h-3.5 ml-1 text-slate-455 dark:text-slate-500" />
@@ -365,7 +365,7 @@ export default function Invoices() {
                           {activeDropdownId === inv.id && (
                             <div 
                               onClick={(e) => e.stopPropagation()}
-                              className="absolute right-0 mt-1.5 w-44 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 shadow-xl z-30 py-1.5 text-left animate-fade-in"
+                              className="absolute right-0 mt-1.5 w-44 rounded-2xl bg-white dark:bg-slate-955 border border-slate-200 dark:border-slate-800/80 shadow-xl z-30 py-1.5 text-left animate-fade-in"
                             >
                               {Number(inv.balance_due) > 0 && (
                                 <button
@@ -389,7 +389,7 @@ export default function Invoices() {
 
                               <button
                                 onClick={() => { handleDelete(inv.id); setActiveDropdownId(null); }}
-                                className="w-full px-4 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors flex items-center space-x-2.5 cursor-pointer text-left"
+                                className="w-full px-4 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-955/20 transition-colors flex items-center space-x-2.5 cursor-pointer text-left"
                               >
                                 <Trash2 className="w-4 h-4" />
                                 <span>Delete Record</span>
@@ -405,6 +405,125 @@ export default function Invoices() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Invoices List Ledger - Mobile Cards */}
+      <div className="md:hidden space-y-4">
+        {loading ? (
+          <div className="glass-card p-8 text-center text-slate-500 dark:text-slate-400">
+            <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-amber-500" />
+            <span>Syncing financial ledger...</span>
+          </div>
+        ) : filteredInvoices.length === 0 ? (
+          <div className="glass-card p-8 text-center text-slate-500 dark:text-slate-400">
+            No transactions matched your current filters.
+          </div>
+        ) : (
+          filteredInvoices.map((inv) => {
+            const isStore = inv.invoice_type === 'Store';
+            const initials = inv.member_name 
+              ? inv.member_name.split(' ').map((n: string) => n[0] || '').join('').toUpperCase().substring(0, 2)
+              : 'WC';
+            const displayName = inv.member_name === '2 undefined' ? 'Walk-in Customer' : inv.member_name;
+
+            return (
+              <div key={inv.id} className="glass-card p-4 space-y-3.5 shadow-sm border border-slate-200/80 dark:border-slate-800/80">
+                {/* Header: Receipt # & Status */}
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wide">Receipt ID</span>
+                    <h4 className="font-extrabold text-xs text-slate-900 dark:text-white">#{inv.id.toString().padStart(5, '0')}</h4>
+                  </div>
+                  <div>
+                    {getStatusBadge(inv.payment_status)}
+                  </div>
+                </div>
+
+                {/* Member Details */}
+                <div className="flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/30 p-2 rounded-xl border border-slate-100 dark:border-slate-800/50">
+                  <div className="flex-shrink-0 h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center overflow-hidden">
+                    <span className="text-[10px] font-black text-slate-500 dark:text-slate-400">{initials}</span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-slate-900 dark:text-white truncate">{displayName}</div>
+                    <div className="text-[9px] text-slate-500 font-medium">{inv.member_mobile || 'No Mobile'}</div>
+                  </div>
+                </div>
+
+                {/* Date & category info */}
+                <div className="grid grid-cols-3 gap-2 text-[10px] py-1 border-y border-slate-100 dark:border-slate-800/80">
+                  <div>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase block mb-0.5">Billing Date</span>
+                    <span className="font-bold text-slate-700 dark:text-slate-350">
+                      {new Date(inv.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase block mb-0.5">Category</span>
+                    {isStore ? (
+                      <span className="text-amber-500 font-bold flex items-center">
+                        <ShoppingBag className="w-2.5 h-2.5 mr-0.5" /> Store
+                      </span>
+                    ) : (
+                      <span className="text-indigo-500 font-bold flex items-center">
+                        <CreditCard className="w-2.5 h-2.5 mr-0.5" /> Plan
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase block mb-0.5">Method</span>
+                    <span className="font-bold text-slate-700 dark:text-slate-300">{inv.payment_method || 'N/A'}</span>
+                  </div>
+                </div>
+
+                {/* Financial summaries */}
+                <div className="grid grid-cols-3 gap-2 text-center text-xs py-1">
+                  <div className="text-left">
+                    <span className="text-[8px] font-bold text-slate-400 uppercase block mb-0.5">Total</span>
+                    <span className="font-extrabold text-slate-900 dark:text-white">₹{Number(inv.total_amount).toLocaleString('en-IN')}</span>
+                  </div>
+                  <div>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase block mb-0.5">Paid</span>
+                    <span className="font-extrabold text-emerald-600 dark:text-emerald-450">₹{Number(inv.amount_paid).toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[8px] font-bold text-slate-400 uppercase block mb-0.5">Dues</span>
+                    <span className={`font-extrabold ${Number(inv.balance_due) > 0 ? 'text-rose-500 dark:text-rose-455' : 'text-slate-400'}`}>
+                      ₹{Number(inv.balance_due).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+                  {Number(inv.balance_due) > 0 && (
+                    <button
+                      onClick={() => handleOpenPayDues(inv)}
+                      className="flex-1 py-2 bg-emerald-500 text-white hover:bg-emerald-600 font-bold text-[9px] uppercase tracking-wide rounded-lg transition-all cursor-pointer flex items-center justify-center space-x-1"
+                    >
+                      <DollarSign className="w-3.5 h-3.5" />
+                      <span>Pay Dues</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setActiveReceiptId(inv.id)}
+                    className="flex-1 py-2 bg-amber-500/10 hover:bg-amber-500 text-amber-600 hover:text-white dark:text-amber-400 font-bold text-[9px] uppercase tracking-wide rounded-lg border border-amber-500/20 hover:border-transparent transition-all cursor-pointer flex items-center justify-center space-x-1"
+                  >
+                    <Printer className="w-3.5 h-3.5" />
+                    <span>Receipt</span>
+                  </button>
+                  <button
+                    onClick={() => handleDelete(inv.id)}
+                    className="p-2 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg transition-all cursor-pointer flex items-center justify-center"
+                    title="Delete Receipt"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* PAY PENDING DUES MODAL */}
