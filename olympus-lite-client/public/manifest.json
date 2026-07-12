@@ -1,0 +1,16 @@
+{
+  "short_name": "Muscle Factory",
+  "name": "Muscle Factory Hub - Gym Management",
+  "icons": [
+    {
+      "src": "/favicon.jpg",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#dc2626",
+  "display": "standalone",
+  "orientation": "portrait"
+}

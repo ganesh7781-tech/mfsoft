@@ -96,7 +96,7 @@ export default function ReceiptModal({ invoiceId, onClose }: ReceiptModalProps) 
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-950 w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden print:shadow-none print:border-none">
+      <div className="bg-white dark:bg-slate-950 w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden print:shadow-none print:border-none">
         
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 print:hidden">
@@ -104,7 +104,7 @@ export default function ReceiptModal({ invoiceId, onClose }: ReceiptModalProps) 
           <div className="flex items-center space-x-2">
             <button
               onClick={handlePrint}
-              className="p-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors duration-150 cursor-pointer flex items-center space-x-1"
+              className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-150 cursor-pointer flex items-center space-x-1"
             >
               <Printer className="w-4 h-4" />
               <span className="text-xs font-semibold">Print</span>
@@ -124,47 +124,47 @@ export default function ReceiptModal({ invoiceId, onClose }: ReceiptModalProps) 
         ) : !invoice ? (
           <div className="p-8 text-center text-red-500">Failed to load invoice details.</div>
         ) : (
-          <div id="print-receipt-modal" className="p-8 text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-950 font-mono text-xs">
+          <div id="print-receipt-modal" className="p-5 sm:p-6 text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-950 font-mono text-xs">
             {/* Gym Header */}
-            <div className="flex items-start justify-between border-b border-slate-200 pb-4 mb-4">
+            <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-4 border-b border-slate-200 pb-4 mb-4">
               <div>
-                <h1 className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white uppercase mb-1">
+                <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white uppercase mb-1">
                   {gym?.gym_name || "Muscle Factory Hub"}
                 </h1>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 max-w-[250px] leading-tight">
+                <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 max-w-xs leading-tight">
                   {gym?.address || "Mount Olympus Base Camp"}
                 </p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 mt-1">
                   Phone: {gym?.contact_phone || "N/A"}
                 </p>
               </div>
-              <div className="text-right">
+              <div className="text-left sm:text-right w-full sm:w-auto">
                 {logoPath ? (
-                  <img src={logoPath} alt="Gym Logo" className="h-10 w-auto object-contain mb-2 ml-auto" />
+                  <img src={logoPath} alt="Gym Logo" className="h-8 sm:h-10 w-auto object-contain mb-1.5 sm:mb-2 sm:ml-auto" />
                 ) : (
-                  <div className="text-amber-500 font-extrabold text-base tracking-wider mb-2 uppercase">Muscle Factory Hub</div>
+                  <div className="text-red-500 font-extrabold text-sm sm:text-base tracking-wider mb-1.5 sm:mb-2 uppercase">Muscle Factory Hub</div>
                 )}
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">
+                <div className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400">
                   Date: {new Date(invoice.created_at).toLocaleString('en-IN')}
                 </div>
               </div>
             </div>
 
             {/* Bill Details */}
-            <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-slate-100">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 pb-4 border-b border-slate-100 text-[10px] sm:text-xs">
               <div>
-                <p className="text-[10px] text-slate-400 uppercase font-semibold">Billed To:</p>
-                <p className="font-bold text-slate-900 dark:text-white">
+                <p className="text-[9px] sm:text-[10px] text-slate-400 uppercase font-semibold">Billed To:</p>
+                <p className="font-bold text-slate-900 dark:text-white truncate max-w-[120px] sm:max-w-none">
                   {invoice.first_name} {invoice.last_name}
                 </p>
-                <p className="text-slate-500">Mobile: {invoice.mobile_number}</p>
+                <p className="text-slate-500 truncate">Mobile: {invoice.mobile_number}</p>
                 <p className="text-slate-500">Member ID: #{invoice.member_id || 'Walk-In'}</p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] text-slate-400 uppercase font-semibold">Receipt Info:</p>
+                <p className="text-[9px] sm:text-[10px] text-slate-400 uppercase font-semibold">Receipt Info:</p>
                 <p className="font-bold text-slate-900 dark:text-white">#{invoice.id.toString().padStart(6, '0')}</p>
-                <p className="text-slate-500">Type: {invoice.invoice_type}</p>
-                <p className="text-slate-500">Method: {invoice.payment_method}</p>
+                <p className="text-slate-550 dark:text-slate-400">Type: {invoice.invoice_type}</p>
+                <p className="text-slate-550 dark:text-slate-400">Method: {invoice.payment_method}</p>
               </div>
             </div>
 

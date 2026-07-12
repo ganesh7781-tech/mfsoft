@@ -281,7 +281,7 @@ export default function Plans() {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-xl text-xs shadow-md mt-4 cursor-pointer"
+                className="w-full py-3 bg-gradient-to-r from-red-600 via-red-500 to-rose-500 hover:from-red-700 hover:via-red-600 hover:to-rose-600 text-white font-bold rounded-xl text-xs shadow-md mt-4 cursor-pointer"
               >
                 {isAddOpen ? 'Create Membership Plan' : 'Save Plan Configuration'}
               </button>

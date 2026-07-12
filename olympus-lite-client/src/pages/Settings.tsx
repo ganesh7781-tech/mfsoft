@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Save, Download, Upload, ShieldAlert, CheckCircle, RefreshCw, Dumbbell, ShieldCheck, HelpCircle, FileText } from 'lucide-react';
+import { Save, Download, Upload, ShieldAlert, CheckCircle, RefreshCw, Dumbbell, ShieldCheck, FileText } from 'lucide-react';
 import api from '../services/api';
 
 export default function Settings() {
@@ -437,18 +437,7 @@ export default function Settings() {
             </form>
           </div>
 
-          {/* Help Box */}
-          <div className="glass-card p-4 bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 text-xs">
-            <div className="flex items-start space-x-2 text-amber-600 dark:text-amber-400">
-              <HelpCircle className="w-4.5 h-4.5 flex-shrink-0 mt-0.5" />
-              <div>
-                <h5 className="font-bold mb-1">PostgreSQL Backup Support</h5>
-                <p className="leading-normal">
-                  If the server is configured with PostgreSQL environment keys, the backup tool will restore directly into your PostgreSQL tables inside transaction statements. If running in fallback mode, the JSON file state is replaced.
-                </p>
-              </div>
-            </div>
-          </div>
+
 
         </div>
 

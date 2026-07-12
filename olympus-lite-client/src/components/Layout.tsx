@@ -11,15 +11,21 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [gymName, setGymName] = useState('Muscle Factory Hub');
+  const [logoUrl, setLogoUrl] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch gym name
+    // Fetch gym name and logo
     api.get('/settings')
       .then(res => {
-        if (res.data.data && res.data.data.gym_name) {
-          setGymName(res.data.data.gym_name);
+        if (res.data.data) {
+          if (res.data.data.gym_name) {
+            setGymName(res.data.data.gym_name);
+          }
+          if (res.data.data.logo_url) {
+            setLogoUrl(res.data.data.logo_url);
+          }
         }
       })
       .catch(() => {});
@@ -50,10 +56,18 @@ export default function Layout({ children }: LayoutProps) {
         {/* Sidebar Header Logo */}
         <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800/80">
           <div className="flex items-center space-x-2.5">
-            <div className="p-1.5 rounded-lg bg-gradient-to-br from-red-600 to-red-500 text-white shadow-md">
-              <Dumbbell className="w-5 h-5" />
-            </div>
-            <span className="font-extrabold text-lg bg-clip-text text-transparent bg-gradient-to-r from-red-650 via-rose-500 to-red-500 tracking-tight uppercase">
+            {logoUrl ? (
+              <img 
+                src={logoUrl.startsWith('http') ? logoUrl : `${(import.meta.env.VITE_API_URL || 'http://localhost:5000').replace('/api/v1', '')}${logoUrl}`} 
+                alt="Gym Logo" 
+                className="h-8 w-8 object-contain rounded-lg shadow-sm" 
+              />
+            ) : (
+              <div className="p-1.5 rounded-lg bg-gradient-to-br from-red-600 to-red-500 text-white shadow-md">
+                <Dumbbell className="w-5 h-5" />
+              </div>
+            )}
+            <span className="font-extrabold text-lg text-red-600 dark:text-red-500 tracking-tight uppercase">
               Muscle Factory Hub
             </span>
           </div>
@@ -82,7 +96,7 @@ export default function Layout({ children }: LayoutProps) {
         </nav>
 
         {/* Sidebar Footer Logout */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800/80">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800/80 flex flex-col space-y-2">
           <button
             onClick={handleLogout}
             className="flex items-center space-x-3 px-4 py-3 w-full rounded-xl text-slate-500 dark:text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 hover:text-rose-600 dark:hover:text-rose-400 font-medium text-sm transition-all duration-150 cursor-pointer"
@@ -90,6 +104,11 @@ export default function Layout({ children }: LayoutProps) {
             <LogOut className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-rose-500" />
             <span>Sign Out</span>
           </button>
+          <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-800/50">
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold tracking-wide uppercase">
+              Developed by <a href="https://buildlabs.in" target="_blank" rel="noopener noreferrer" className="text-red-500 dark:text-red-400 hover:underline">buildlabs.in</a>
+            </span>
+          </div>
         </div>
       </aside>
 
@@ -100,10 +119,18 @@ export default function Layout({ children }: LayoutProps) {
           <div className="relative flex flex-col w-64 bg-white dark:bg-slate-900 h-full shadow-xl z-50">
             <div className="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/80">
               <div className="flex items-center space-x-2.5">
-                <div className="p-1.5 rounded-lg bg-gradient-to-br from-red-600 to-red-500 text-white">
-                  <Dumbbell className="w-5 h-5" />
-                </div>
-                <span className="font-extrabold text-base text-slate-900 dark:text-white uppercase tracking-tight">Muscle Factory Hub</span>
+                {logoUrl ? (
+                  <img 
+                    src={logoUrl.startsWith('http') ? logoUrl : `${(import.meta.env.VITE_API_URL || 'http://localhost:5000').replace('/api/v1', '')}${logoUrl}`} 
+                    alt="Gym Logo" 
+                    className="h-7 w-7 object-contain rounded-lg shadow-sm" 
+                  />
+                ) : (
+                  <div className="p-1.5 rounded-lg bg-gradient-to-br from-red-600 to-red-500 text-white">
+                    <Dumbbell className="w-5 h-5" />
+                  </div>
+                )}
+                <span className="font-extrabold text-base text-red-600 dark:text-red-500 uppercase tracking-tight">Muscle Factory Hub</span>
               </div>
               <button onClick={() => setIsOpen(false)} className="p-1 text-slate-500 dark:text-slate-400">
                 <X className="w-6 h-6" />
@@ -132,7 +159,7 @@ export default function Layout({ children }: LayoutProps) {
               })}
             </nav>
 
-            <div className="p-4 border-t border-slate-200 dark:border-slate-800/80">
+            <div className="p-4 border-t border-slate-200 dark:border-slate-800/80 flex flex-col space-y-2">
               <button
                 onClick={handleLogout}
                 className="flex items-center space-x-3 px-4 py-3 w-full rounded-xl text-slate-500 dark:text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 hover:text-rose-600 dark:hover:text-rose-450 font-medium text-sm transition-all duration-150 cursor-pointer"
@@ -140,6 +167,11 @@ export default function Layout({ children }: LayoutProps) {
                 <LogOut className="w-5 h-5" />
                 <span>Sign Out</span>
               </button>
+              <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-800/50">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold tracking-wide uppercase">
+                  Developed by <a href="https://buildlabs.in" target="_blank" rel="noopener noreferrer" className="text-red-500 dark:text-red-400 hover:underline">buildlabs.in</a>
+                </span>
+              </div>
             </div>
           </div>
         </div>

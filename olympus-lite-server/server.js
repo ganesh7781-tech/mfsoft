@@ -165,9 +165,9 @@ async function bootstrap() {
     const users = await db.query('SELECT id FROM users LIMIT 1');
     if (users.rows.length === 0) {
       console.log('Seeding default administrator credentials...');
-      const hashedPassword = await bcrypt.hash('olympus123', 10);
-      await db.query('INSERT INTO users (username, password_hash) VALUES ($1, $2)', ['admin', hashedPassword]);
-      console.log('Admin user seeded: admin / olympus123');
+      const hashedPassword = await bcrypt.hash('MUSCLE@108', 10);
+      await db.query('INSERT INTO users (username, password_hash) VALUES ($1, $2)', ['musclefactoryhub', hashedPassword]);
+      console.log('Admin user seeded: musclefactoryhub / MUSCLE@108');
     }
 
     // 4. In PostgreSQL mode, verify plans seeded

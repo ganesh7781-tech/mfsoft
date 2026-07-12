@@ -141,8 +141,8 @@ export default function MemberRow({ member, onRenew, onPOS, onEdit, onDelete, on
       <td className="px-6 py-4 whitespace-nowrap text-center">
         {getStatusBadge(member.status)}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative">
-        <div ref={dropdownRef} className="inline-block text-left">
+      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+        <div ref={dropdownRef} className="relative inline-block text-left">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
             className="inline-flex items-center px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 transition-all duration-150 cursor-pointer shadow-sm select-none"

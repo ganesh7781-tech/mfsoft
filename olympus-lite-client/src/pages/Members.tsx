@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, Plus, ShieldAlert, RefreshCw, X, Camera, Image, CreditCard, Upload, Download, ShoppingCart, Edit3, Trash2, FileText } from 'lucide-react';
+import { Search, Plus, ShieldAlert, RefreshCw, X, CreditCard, Download, ShoppingCart, Edit3, Trash2, FileText } from 'lucide-react';
 import api from '../services/api';
 import MemberRow from '../components/MemberRow';
 import ReceiptModal from '../components/ReceiptModal';
@@ -31,11 +31,7 @@ export default function Members() {
   // Active member for edits/renewals
   const [selectedMember, setSelectedMember] = useState<any>(null);
 
-  // Webcam stream state
-  const [useWebcam, setUseWebcam] = useState(false);
-  const [webcamStream, setWebcamStream] = useState<MediaStream | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
 
   // Onboarding Form fields
@@ -118,57 +114,9 @@ export default function Members() {
     }
   }, [searchParams, navigate]);
 
-  // Handle webcam capture initialization
-  const startWebcam = async () => {
-    try {
-      setUseWebcam(true);
-      setCapturedPhoto(null);
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 320 } });
-      setWebcamStream(stream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (err) {
-      console.error("Camera access failed:", err);
-      setUseWebcam(false);
-      alert("Could not access camera. Please upload an image or check permissions.");
-    }
-  };
 
-  const stopWebcam = () => {
-    if (webcamStream) {
-      webcamStream.getTracks().forEach(track => track.stop());
-      setWebcamStream(null);
-    }
-    setUseWebcam(false);
-  };
 
-  const capturePhoto = () => {
-    if (videoRef.current && canvasRef.current) {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      canvas.width = 300;
-      canvas.height = 300;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(video, 0, 0, 300, 300);
-        const dataUrl = canvas.toDataURL('image/png');
-        setCapturedPhoto(dataUrl);
-        stopWebcam();
-      }
-    }
-  };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCapturedPhoto(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   // Onboarding Form Submit
   const handleOnboardSubmit = async (e: React.FormEvent) => {
@@ -300,7 +248,6 @@ export default function Members() {
       payment_method: 'Cash',
     });
     setCapturedPhoto(null);
-    stopWebcam();
     setFormError('');
   };
 
@@ -484,7 +431,7 @@ export default function Members() {
               onClick={() => setFilter(f)}
               className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                 filter === f
-                  ? 'bg-amber-500 text-white shadow-md shadow-amber-500/10'
+                  ? 'bg-red-500 text-white shadow-md shadow-red-500/10'
                   : 'bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400'
               }`}
             >
@@ -495,8 +442,8 @@ export default function Members() {
       </div>
 
       {/* Directory Table - Desktop */}
-      <div className="glass-card overflow-hidden hidden md:block">
-        <div className="overflow-x-auto">
+      <div className="glass-card hidden md:block">
+        <div className="overflow-x-visible">
           <table className="min-w-full divide-y divide-slate-150 dark:divide-slate-800/80">
             <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-550 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
               <tr>
@@ -742,58 +689,7 @@ export default function Members() {
                 </div>
               )}
 
-              {/* Photo Upload & Webcam Section */}
-              <div className="p-4 bg-slate-50 dark:bg-slate-900/20 rounded-2xl border border-slate-150 dark:border-slate-800">
-                <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Member Photograph</span>
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-                  <div className="w-24 h-24 rounded-2xl bg-white dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center overflow-hidden relative flex-shrink-0 shadow-inner">
-                    {capturedPhoto ? (
-                      <img src={capturedPhoto} alt="Captured Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <Image className="w-8 h-8 text-slate-400" />
-                    )}
-                  </div>
-                  <div className="space-y-2 flex-1 w-full text-center sm:text-left">
-                    <div className="flex flex-wrap justify-center sm:justify-start gap-2">
-                      <button
-                        type="button"
-                        onClick={useWebcam ? stopWebcam : startWebcam}
-                        className="btn-premium-secondary py-2 px-3.5 flex items-center justify-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer"
-                      >
-                        <Camera className="w-4 h-4 text-amber-500" />
-                        <span>{useWebcam ? 'Turn Off WebCam' : 'Capture Live Photo'}</span>
-                      </button>
 
-                      <label className="btn-premium-secondary py-2 px-3.5 flex items-center justify-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer">
-                        <Upload className="w-4 h-4 text-amber-500" />
-                        <span>Upload photo file</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileChange}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                    <p className="text-[10px] text-slate-500 leading-tight">Capture photo via webcam or upload an image file from your computer</p>
-                  </div>
-                </div>
-
-                {/* Webcam Live Feed */}
-                {useWebcam && (
-                  <div className="mt-4 p-4 bg-slate-950 rounded-2xl flex flex-col items-center border border-slate-800">
-                    <video ref={videoRef} autoPlay playsInline className="w-64 h-64 object-cover rounded-xl border border-slate-800 mb-3 shadow-lg" />
-                    <button
-                      type="button"
-                      onClick={capturePhoto}
-                      className="py-2.5 px-6 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold text-xs hover:from-orange-600 hover:to-amber-600 transition-all cursor-pointer shadow-md"
-                    >
-                      Capture Frame
-                    </button>
-                    <canvas ref={canvasRef} className="hidden" />
-                  </div>
-                )}
-              </div>
 
               {/* Personal Details */}
               <div className="space-y-4">
@@ -937,7 +833,7 @@ export default function Members() {
                           onClick={() => setFormData({ ...formData, payment_method: m })}
                           className={`py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer border ${
                             formData.payment_method === m
-                              ? 'bg-amber-500 text-white border-amber-600 shadow-md shadow-amber-500/10'
+                              ? 'bg-red-500 text-white border-red-600 shadow-md shadow-red-500/10'
                               : 'bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800/80 text-slate-600 dark:text-slate-400'
                           }`}
                         >
@@ -980,7 +876,7 @@ export default function Members() {
             <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center space-x-2">
                 <span className="p-1.5 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 animate-pulse">
-                  <Camera className="w-5 h-5" />
+                  <Edit3 className="w-5 h-5" />
                 </span>
                 <h2 className="text-base font-extrabold text-slate-900 dark:text-white uppercase tracking-tight">Edit Member Profile</h2>
               </div>
@@ -1002,61 +898,7 @@ export default function Members() {
                 </div>
               )}
 
-              {/* Photo section */}
-              <div className="p-4 bg-slate-50 dark:bg-slate-900/20 rounded-2xl border border-slate-150 dark:border-slate-800">
-                <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Member Photograph</span>
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-                  <div className="w-24 h-24 rounded-2xl bg-white dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner relative">
-                    {capturedPhoto ? (
-                      <img
-                        src={capturedPhoto.startsWith('data') || capturedPhoto.startsWith('http') ? capturedPhoto : `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${capturedPhoto}`}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <Image className="w-8 h-8 text-slate-400" />
-                    )}
-                  </div>
-                  <div className="space-y-2 flex-1 w-full text-center sm:text-left">
-                    <div className="flex flex-wrap justify-center sm:justify-start gap-2">
-                      <button
-                        type="button"
-                        onClick={useWebcam ? stopWebcam : startWebcam}
-                        className="btn-premium-secondary py-2 px-3.5 flex items-center justify-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer"
-                      >
-                        <Camera className="w-4 h-4 text-amber-500" />
-                        <span>{useWebcam ? 'Turn Off WebCam' : 'Capture Live Photo'}</span>
-                      </button>
 
-                      <label className="btn-premium-secondary py-2 px-3.5 flex items-center justify-center space-x-1.5 text-xs border border-slate-200 dark:border-slate-800 cursor-pointer">
-                        <Upload className="w-4 h-4 text-amber-500" />
-                        <span>Upload photo file</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileChange}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                    <p className="text-[10px] text-slate-550 leading-tight">Capture photo via webcam or upload an image file from your computer</p>
-                  </div>
-                </div>
-
-                {useWebcam && (
-                  <div className="mt-4 p-4 bg-slate-950 rounded-2xl flex flex-col items-center border border-slate-800">
-                    <video ref={videoRef} autoPlay playsInline className="w-64 h-64 object-cover rounded-xl border border-slate-800 mb-3 shadow-lg" />
-                    <button
-                      type="button"
-                      onClick={capturePhoto}
-                      className="py-2.5 px-6 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold text-xs hover:from-orange-600 hover:to-amber-600 transition-all cursor-pointer shadow-md"
-                    >
-                      Capture Frame
-                    </button>
-                    <canvas ref={canvasRef} className="hidden" />
-                  </div>
-                )}
-              </div>
 
               {/* Personal Details */}
               <div className="space-y-4">
@@ -1341,7 +1183,7 @@ export default function Members() {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-xl text-xs shadow-md mt-4 cursor-pointer"
+                className="w-full py-3 bg-gradient-to-r from-red-600 via-red-500 to-rose-500 hover:from-red-700 hover:via-red-600 hover:to-rose-600 text-white font-bold rounded-xl text-xs shadow-md mt-4 cursor-pointer"
               >
                 Confirm Renewal & Generate Invoice
               </button>

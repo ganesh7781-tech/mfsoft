@@ -284,7 +284,7 @@ export default function Enquiries() {
                 onClick={() => setStatusFilter(tab.id as any)}
                 className={`px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                   isSelected
-                    ? 'bg-amber-500 text-white shadow-md shadow-amber-500/15'
+                    ? 'bg-red-500 text-white shadow-md shadow-red-500/15'
                     : 'bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-650 dark:text-slate-400'
                 }`}
               >
@@ -296,8 +296,8 @@ export default function Enquiries() {
       </div>
 
       {/* Enquiries Ledger Grid - Desktop */}
-      <div className="glass-card overflow-hidden border border-slate-200/80 dark:border-slate-800/80 shadow-sm hidden md:block">
-        <div className="overflow-x-auto">
+      <div className="glass-card border border-slate-200/80 dark:border-slate-800/80 shadow-sm hidden md:block">
+        <div className="overflow-x-visible">
           <table className="min-w-full divide-y divide-slate-150 dark:divide-slate-855">
             <thead className="bg-slate-50 dark:bg-slate-900/60 text-slate-550 dark:text-slate-405 text-[10px] font-bold uppercase tracking-wider">
               <tr>
@@ -380,8 +380,8 @@ export default function Enquiries() {
                         {getStatusBadge(enq.status)}
                       </td>
 
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative">
-                        <div className="inline-block text-left">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="relative inline-block text-left">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();

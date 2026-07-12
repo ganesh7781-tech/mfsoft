@@ -244,7 +244,7 @@ export default function Expenses() {
             onClick={() => setCategoryFilter('all')}
             className={`px-3.5 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
               categoryFilter === 'all'
-                ? 'bg-amber-500 text-white shadow-md shadow-amber-500/15'
+                ? 'bg-red-500 text-white shadow-md shadow-red-500/15'
                 : 'bg-slate-100 dark:bg-slate-900 hover:bg-slate-200/85 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400'
             }`}
           >
@@ -259,7 +259,7 @@ export default function Expenses() {
                 onClick={() => setCategoryFilter(c)}
                 className={`px-3.5 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center ${
                   isSelected
-                    ? 'bg-amber-500 text-white shadow-md shadow-amber-500/15'
+                    ? 'bg-red-500 text-white shadow-md shadow-red-500/15'
                     : 'bg-slate-100 dark:bg-slate-900 hover:bg-slate-200/85 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400'
                 }`}
               >
